@@ -2,6 +2,7 @@
 
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from server import app
 db = SQLAlchemy()
 
 
@@ -15,8 +16,8 @@ class User(db.Model):
     lname = db.Column(db.String(25), nullable=False)
     email = db.Column(db.String(100), nullable=False)
     password = db.Column(db.String(), nullable=False)
-    created_at = db.Column(db.Datetime, nullable=True)
-    deleted_at = db.Column(db.Datetime, nullable=True)
+    created_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
+    deleted_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
 
     def __repr__(self):
         """Provides useful printed representation"""
@@ -31,8 +32,8 @@ class Symptom(db.Model):
     symptom_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(200), nullable=True)
-    created_at = db.Column(db.Datetime, nullable=True)
-    deleted_at = db.Column(db.Datetime, nullable=True)
+    created_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
+    deleted_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
 
     def __repr__(self):
         """Provides useful printed representation"""
@@ -47,8 +48,8 @@ class Treatment(db.Model):
     treatment_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(200), nullable=True)
-    created_at = db.Column(db.Datetime, nullable=True)
-    deleted_at = db.Column(db.Datetime, nullable=True)
+    created_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
+    deleted_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
 
     def __repr__(self):
         """Provides useful printed representation"""
@@ -64,11 +65,11 @@ class UserSymptom(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False, index=True, )
     symptom_id = db.Column(db.Integer, db.ForeignKey('symptoms.symptom_id'),
                                                     nullable=False, index=True)
-    created_at = db.Column(db.Datetime, nullable=True)
-    deleted_at = db.Column(db.Datetime, nullable=True)
+    created_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
+    deleted_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
 
     user = db.relationship("User", backref=db.backref("user_symptom"))
-    symptom = db.rlationship("Symptom", backref=db.backref("user_symptom"))
+    symptom = db.relationship("Symptom", backref=db.backref("user_symptom"))
 
     def __repr__(self):
         """Provides useful printed representation"""
@@ -86,8 +87,8 @@ class UserTreatment(db.Model):
                                                    nullable=False, index=True)
     treatment_id = db.Column(db.Integer, db.ForeignKey('treatments.treatment_id'),
                                                     nullable=False, index=True)
-    created_at = db.Column(db.Datetime, nullable=True)
-    deleted_at = db.Column(db.Datetime, nullable=True)
+    created_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
+    deleted_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
 
     user = db.relationship("User", backref=db.backref("user_treatment"))
     treatment = db.relationship("Treatment", backref=db.backref("user_treatment"))
@@ -107,9 +108,9 @@ class SymptomEntry(db.Model):
     user_symp_id = db.Column(db.Integer, db.ForeignKey('user-symptoms.user_symp_id'),
                                                     nullable=False, index=True)
     value = db.Column(db.Integer, nullable=False)
-    created_at = db.Column(db.Datetime, nullable=True)
-    updated_at = db.Column(db.Datetime, nullable=True)
-    deleted_at = db.Column(db.Datetime, nullable=True)
+    created_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
+    updated_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
+    deleted_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
 
     user_symp = db.relationship("UserSymptom", backref=db.backref("symptom_entry"))
 
@@ -126,19 +127,24 @@ class TreatmentEntry(db.Model):
     __tablename__ = "treatment-entries"
 
     entry_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_treat_id = db.Column(db.Integer, db.ForeignKey('user-treatments.user_treat_id'),
+    # user_treat_id = db.Column(db.Integer, db.ForeignKey('user-treatments.user_treat_id'),
+    #                                                 nullable=False, index=True)
+    user_treat_id = db.Column(db.Integer, db.ForeignKey('user-treatments'),
                                                     nullable=False, index=True)
     value = db.Column(db.Integer, nullable=False)
-    created_at = db.Column(db.Datetime, nullable=True)
-    updated_at = db.Column(db.Datetime, nullable=True)
-    deleted_at = db.Column(db.Datetime, nullable=True)
+    created_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
+    updated_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
+    deleted_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
 
-    user_treat = db.relationship("UserSymptom", backref=db.backref("treatment_entry"))
+    user_treat = db.relationship("UserTreatment", backref=db.backref("treatment_entry"), primaryjoin="TreatmentEntry.user_treat_id == UserTreatment.user_treat_id")
 
     def __repr__(self):
         """Provides useful printed representation"""
-        return "<TreatmentEntry %s declared %s as value %s" % (
-                        self.entry_id, self.user_treat.treatment.name, self.value)
+        return "<TreatmentEntry %s declared %s as value %s" % (self.entry_id,
+                                                               self.user_treat_id.treatment.name,
+                                                               self.value
+                                                               )
+
 
 class Comments(db.Model):
     """defines Comment model of user entry of a daily comment"""
@@ -149,17 +155,27 @@ class Comments(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'),
                                                     nullable=False, index=True)
     comment = db.Column(db.String(500), nullable=False)
-    created_at = db.Column(db.Datetime, nullable=True)
-    updated_at = db.Column(db.Datetime, nullable=True)
-    deleted_at = db.Column(db.Datetime, nullable=True)
+    created_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
+    updated_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
+    deleted_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
 
+
+def connect_to_db(app):
+    """Connect the database to our Flask app."""
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///beetlyme'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    db.app = app
+    db.init_app(app)
 
 
 if __name__ == "__main__":
 
-    from flask import Flask
+    # from flask import Flask
 
-    app = Flask(__name__)
+    # app = Flask(__name__)
 
     connect_to_db(app)
+    db.drop_all()
+    db.create_all()
     print "Connected to DB."
