@@ -17,7 +17,7 @@ class User(db.Model):
     email = db.Column(db.String(100), nullable=False)
     password = db.Column(db.String(), nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
-    deleted_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
+    deleted_at = db.Column(db.DateTime(timezone=True), nullable=True)
 
     def __repr__(self):
         """Provides useful printed representation"""
@@ -32,8 +32,8 @@ class Symptom(db.Model):
     symptom_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(200), nullable=True)
-    created_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
-    deleted_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
+    created_at = db.Column(db.DateTime(timezone=True), default=db.func.now(),nullable=True)
+    deleted_at = db.Column(db.DateTime(timezone=True), nullable=True)
 
     def __repr__(self):
         """Provides useful printed representation"""
@@ -49,7 +49,7 @@ class Treatment(db.Model):
     name = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(200), nullable=True)
     created_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
-    deleted_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
+    deleted_at = db.Column(db.DateTime(timezone=True), nullable=True)
 
     def __repr__(self):
         """Provides useful printed representation"""
@@ -57,16 +57,16 @@ class Treatment(db.Model):
 
 
 class UserSymptom(db.Model):
-    """defines User-Symptom model, associating users and symptoms"""
+    """defines UserSymptom model, associating users and symptoms"""
 
-    __tablename__ = "user-symptoms"
+    __tablename__ = "user_symptoms"
 
     user_symp_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False, index=True, )
     symptom_id = db.Column(db.Integer, db.ForeignKey('symptoms.symptom_id'),
                                                     nullable=False, index=True)
     created_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
-    deleted_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
+    deleted_at = db.Column(db.DateTime(timezone=True), nullable=True)
 
     user = db.relationship("User", backref=db.backref("user_symptom"))
     symptom = db.relationship("Symptom", backref=db.backref("user_symptom"))
@@ -80,7 +80,7 @@ class UserSymptom(db.Model):
 class UserTreatment(db.Model):
     """defines UserTreatment model, associating users and treatments"""
 
-    __tablename__ = "user-treatments"
+    __tablename__ = "user_treatments"
 
     user_treat_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'),
@@ -88,7 +88,7 @@ class UserTreatment(db.Model):
     treatment_id = db.Column(db.Integer, db.ForeignKey('treatments.treatment_id'),
                                                     nullable=False, index=True)
     created_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
-    deleted_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
+    deleted_at = db.Column(db.DateTime(timezone=True), nullable=True)
 
     user = db.relationship("User", backref=db.backref("user_treatment"))
     treatment = db.relationship("Treatment", backref=db.backref("user_treatment"))
@@ -102,15 +102,15 @@ class UserTreatment(db.Model):
 class SymptomEntry(db.Model):
     """defines model for SymptomEntry storing user data for tracking symptom"""
 
-    __tablename__ = "symptom-entries"
+    __tablename__ = "symptom_entries"
 
     entry_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_symp_id = db.Column(db.Integer, db.ForeignKey('user-symptoms.user_symp_id'),
+    user_symp_id = db.Column(db.Integer, db.ForeignKey('user_symptoms.user_symp_id'),
                                                     nullable=False, index=True)
     value = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
-    updated_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
-    deleted_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
+    updated_at = db.Column(db.DateTime(timezone=True), nullable=True)
+    deleted_at = db.Column(db.DateTime(timezone=True), nullable=True)
 
     user_symp = db.relationship("UserSymptom", backref=db.backref("symptom_entry"))
 
@@ -124,19 +124,20 @@ class SymptomEntry(db.Model):
 class TreatmentEntry(db.Model):
     """defines model for TreatmentEntry storing user data for tracking treatment"""
 
-    __tablename__ = "treatment-entries"
+    __tablename__ = "treatment_entries"
 
     entry_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     # user_treat_id = db.Column(db.Integer, db.ForeignKey('user-treatments.user_treat_id'),
     #                                                 nullable=False, index=True)
-    user_treat_id = db.Column(db.Integer, db.ForeignKey('user-treatments'),
+    user_treat_id = db.Column(db.Integer, db.ForeignKey('user_treatments.user_treat_id'),
                                                     nullable=False, index=True)
     value = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
-    updated_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
-    deleted_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
+    updated_at = db.Column(db.DateTime(timezone=True), nullable=True)
+    deleted_at = db.Column(db.DateTime(timezone=True), nullable=True)
 
-    user_treat = db.relationship("UserTreatment", backref=db.backref("treatment_entry"), primaryjoin="TreatmentEntry.user_treat_id == UserTreatment.user_treat_id")
+    user_treat = db.relationship("UserTreatment", backref=db.backref("treatment_entry"))
+    #, primaryjoin="TreatmentEntry.user_treat_id == UserTreatment.user_treat_id"
 
     def __repr__(self):
         """Provides useful printed representation"""
@@ -156,8 +157,8 @@ class Comments(db.Model):
                                                     nullable=False, index=True)
     comment = db.Column(db.String(500), nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
-    updated_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
-    deleted_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
+    updated_at = db.Column(db.DateTime(timezone=True), nullable=True)
+    deleted_at = db.Column(db.DateTime(timezone=True), nullable=True)
 
 
 def connect_to_db(app):

@@ -1,6 +1,6 @@
 from sqlalchemy import func
 from model import User, Treatment, Symptom, connect_to_db, db
-from model import UserTreatment, UserSymptom
+from model import UserTreatment, UserSymptom, SymptomEntry, TreatmentEntry
 from server import app
 from datetime import datetime
 
@@ -118,8 +118,14 @@ def load_fake_treatment_entries():
 
     TreatmentEntry.query.delete()
 
-    for row in 
+    for row in open("seed_data/u.fake_treatment_entries"):
+        row = row.rstrip()
+        user_treat_id, value, created_at = row.split("|")
+        treatment_entry = TreatmentEntry(user_treat_id=user_treat_id, value=value,
+                                            created_at=created_at)
+        db.session.add(treatment_entry)
 
+    db.session.commit()
 
 
 
@@ -130,9 +136,10 @@ if __name__ == "__main__":
     db.create_all()
 
     # Import different types of data
-    #load_users()
-    #load_symptoms()
-    #load_treatments()
+    load_users()
+    load_symptoms()
+    load_treatments()
     load_user_symptoms()
     load_user_treatments()
     load_fake_symptom_entries()
+    load_fake_treatment_entries()
