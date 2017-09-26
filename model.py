@@ -15,7 +15,7 @@ class User(db.Model):
     lname = db.Column(db.String(25), nullable=False)
     email = db.Column(db.String(100), nullable=False)
     password = db.Column(db.String(), nullable=False)
-    created_at = db.Column(db.Datetime, nullable=False)
+    created_at = db.Column(db.Datetime, nullable=True)
     deleted_at = db.Column(db.Datetime, nullable=True)
 
     def __repr__(self):
@@ -31,7 +31,7 @@ class Symptom(db.Model):
     symptom_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(200), nullable=True)
-    created_at = db.Column(db.Datetime, nullable=False)
+    created_at = db.Column(db.Datetime, nullable=True)
     deleted_at = db.Column(db.Datetime, nullable=True)
 
     def __repr__(self):
@@ -47,7 +47,7 @@ class Treatment(db.Model):
     treatment_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(200), nullable=True)
-    created_at = db.Column(db.Datetime, nullable=False)
+    created_at = db.Column(db.Datetime, nullable=True)
     deleted_at = db.Column(db.Datetime, nullable=True)
 
     def __repr__(self):
@@ -64,7 +64,7 @@ class UserSymptom(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False, index=True, )
     symptom_id = db.Column(db.Integer, db.ForeignKey('symptoms.symptom_id'),
                                                     nullable=False, index=True)
-    created_at = db.Column(db.Datetime, nullable=False)
+    created_at = db.Column(db.Datetime, nullable=True)
     deleted_at = db.Column(db.Datetime, nullable=True)
 
     user = db.relationship("User", backref=db.backref("user_symptom"))
@@ -86,7 +86,7 @@ class UserTreatment(db.Model):
                                                    nullable=False, index=True)
     treatment_id = db.Column(db.Integer, db.ForeignKey('treatments.treatment_id'),
                                                     nullable=False, index=True)
-    created_at = db.Column(db.Datetime, nullable=False)
+    created_at = db.Column(db.Datetime, nullable=True)
     deleted_at = db.Column(db.Datetime, nullable=True)
 
     user = db.relationship("User", backref=db.backref("user_treatment"))
@@ -107,7 +107,7 @@ class SymptomEntry(db.Model):
     user_symp_id = db.Column(db.Integer, db.ForeignKey('user-symptoms.user_symp_id'),
                                                     nullable=False, index=True)
     value = db.Column(db.Integer, nullable=False)
-    created_at = db.Column(db.Datetime, nullable=False)
+    created_at = db.Column(db.Datetime, nullable=True)
     updated_at = db.Column(db.Datetime, nullable=True)
     deleted_at = db.Column(db.Datetime, nullable=True)
 
@@ -129,7 +129,7 @@ class TreatmentEntry(db.Model):
     user_treat_id = db.Column(db.Integer, db.ForeignKey('user-treatments.user_treat_id'),
                                                     nullable=False, index=True)
     value = db.Column(db.Integer, nullable=False)
-    created_at = db.Column(db.Datetime, nullable=False)
+    created_at = db.Column(db.Datetime, nullable=True)
     updated_at = db.Column(db.Datetime, nullable=True)
     deleted_at = db.Column(db.Datetime, nullable=True)
 
@@ -149,7 +149,7 @@ class Comments(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'),
                                                     nullable=False, index=True)
     comment = db.Column(db.String(500), nullable=False)
-    created_at = db.Column(db.Datetime, nullable=False)
+    created_at = db.Column(db.Datetime, nullable=True)
     updated_at = db.Column(db.Datetime, nullable=True)
     deleted_at = db.Column(db.Datetime, nullable=True)
 
