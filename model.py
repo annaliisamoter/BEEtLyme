@@ -2,7 +2,7 @@
 
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from server import app
+#from server import app
 db = SQLAlchemy()
 
 
@@ -172,11 +172,11 @@ def connect_to_db(app):
 
 if __name__ == "__main__":
 
-    # from flask import Flask
+    #from flask import Flask
 
-    # app = Flask(__name__)
+    from server import app
 
     connect_to_db(app)
-    db.drop_all()
-    db.create_all()
+    #db.drop_all()
+    #db.create_all()
     print "Connected to DB."
