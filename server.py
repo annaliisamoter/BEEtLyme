@@ -70,7 +70,7 @@ def login_process():
         session['logged_in'] = True
         flash("You are logged in!")
         print "login success"
-        return redirect('/')
+        return redirect('/profile')
 
     else:
         flash("Login failed, please try again")
@@ -84,8 +84,14 @@ def show_profile():
     if session['user_id']:
         u = session['user_id']
         q = User.query.filter(User.user_id == u).first()
+        symptoms = q.user_symptom
+        #list of symptom objects
+        treatments = q.user_treatment
+        print q.fname, q.lname
+        print symptoms
+        print treatments
 
-        return render_template('/profile', user=q)
+        return render_template('/profile.html', user=q, symptoms=symptoms, treatments=treatments)
 
     else:
         flash("You must be logged in to access this page")

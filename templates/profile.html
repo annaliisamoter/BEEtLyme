@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Welcome back {{ user.fname, user.lname }}</h2>
+<br>
+<h3>Here are the symptoms you are tracking:</h3>
+<ul>{% for symptom in symptoms %}
+    <li>{{ symptom.symptom.name }}</li>
+    {% endfor %}
+</ul>
+<br>
+<h3>And the treatments you're tracking:</h3>
+<ul>{% for treatment in treatments %}
+    <li>{{ treatment.treatment.name }}</li>
+    {% endfor %}
+</ul>
+<br>
+<br>
+
+
+<p><a href="/setsymptoms">Set new symptoms to track</a></p>
+
+<p><a href="/settreatments">Set new treatments to track</a></p>
+
+
+
+{% endblock %}
