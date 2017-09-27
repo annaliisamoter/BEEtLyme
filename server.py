@@ -16,7 +16,7 @@ app.jinja_env.undefined = StrictUndefined
 @app.route('/')
 def index():
     """Homepage."""
-
+    session['user_id'] = 1
     return render_template("homepage.html")
 
 
@@ -99,9 +99,6 @@ def show_profile():
         symptoms = q.user_symptom
         #list of symptom objects
         treatments = q.user_treatment
-        print q.fname, q.lname
-        print symptoms
-        print treatments
 
         return render_template('/profile.html', user=q, symptoms=symptoms, treatments=treatments)
 
@@ -123,18 +120,22 @@ def set_new_symptom():
     """
 
     symptom = request.form.get("symptom")
+    symptom = symptom.capitalize()
     print "Symptom captured from form is", symptom
     user = session['user_id']
     symptoms_master_list = db.session.query(Symptom.name).all()
     print
-    print "Symptom master list is", symptoms_master_list
 
-    if symptom in symptoms_master_list:
-        symptom = Symptom.query.filter_by(name=symptom)
-        user_symptom = UserSymptom(symptom_id=symptom.symptom_id, user_id=user)
-        db.session.add(user_symptom)
-        print
-        print symptom.name, "added to user_symptom db."
+    for symp in symptoms_master_list:
+        print symp
+
+        if symptom in symp:
+            symptom = Symptom.query.filter_by(name=symptom).first()
+            user_symptom = UserSymptom(symptom_id=symptom.symptom_id, user_id=user)
+            db.session.add(user_symptom)
+            print
+            print "Existing ", symptom.name, "added to user_symptom db."
+            break
 
     else:
         symptom = Symptom(name=symptom)
@@ -143,7 +144,7 @@ def set_new_symptom():
         user_symptom = UserSymptom(symptom_id=symptom_id, user_id=user)
         db.session.add(user_symptom)
         print
-        print "New ", symptom, " added to user_symptom db."
+        print "New ", symptom.name, " added to user_symptom db."
 
     db.session.commit()
 
@@ -153,7 +154,7 @@ def set_new_symptom():
 
 if __name__ == "__main__":
     app.debug = True
-    DEBUG_TB_INTERCEPT_REDIRECTS=False
+    app.config['DEBUG_TB_INTERCEPT_REDIRECTS']=False
     connect_to_db(app)
     DebugToolbarExtension(app)
 
