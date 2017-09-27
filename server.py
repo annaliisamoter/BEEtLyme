@@ -51,6 +51,7 @@ def register_process():
         flash("Welcome!")
         return render_template('/login')
 
+
 @app.route('/login', methods=["GET"])
 def login_display():
     """ return login page """
@@ -106,6 +107,7 @@ def show_profile():
         flash("You must be logged in to access this page")
         return redirect('/login')
 
+
 @app.route('/set_symptom', methods=["GET"])
 def show_set_symptoms():
     """Shows set symptoms page"""
@@ -116,7 +118,7 @@ def show_set_symptoms():
 @app.route('/set_symptom', methods=["POST"])
 def set_new_symptom():
     """Adds a user-generated symptom to the user_symptom table.
-        If not already there, also created new Symptom and adds to symptoms table.
+        If not already there, also creates new Symptom and adds to symptoms table.
     """
 
     symptom = request.form.get("symptom")
@@ -151,10 +153,54 @@ def set_new_symptom():
     return redirect('/profile')
 
 
+@app.route('/set_treatment', methods=["GET"])
+def show_set_treatment():
+    """Shows set treatment page"""
+
+    return render_template('/set_treatment.html')
+
+
+@app.route('/set_treatment', methods=["POST"])
+def set_new_treatment():
+    """Adds a user-generated treatment to the user_treatment table.
+        If not already there, also creates new Treatment and adds to symptoms table.
+    """
+
+    treatment = request.form.get("treatment")
+    treatment = treatment.capitalize()
+    print "Treatment captured from form is", treatment
+    user = session['user_id']
+    treatments_master_list = db.session.query(Treatment.name).all()
+    print
+
+    for treat in treatments_master_list:
+        print treat
+
+        if treatment in treat:
+            treatment = Treatment.query.filter_by(name=treatment).first()
+            user_treatment = UserTreatment(treatment_id=treatment.treatment_id, user_id=user)
+            db.session.add(user_treatment)
+            print
+            print "Existing ", treatment.name, " added to user_treatment db."
+            break
+
+    else:
+        treatment = Treatment(name=treatment)
+        db.session.add(treatment)
+        treatment_id = db.session.query(Treatment.treatment_id).filter_by(name=treatment.name)
+        user_treatment = UserTreatment(treatment_id=treatment_id, user_id=user)
+        db.session.add(user_treatment)
+        print
+        print "New ", treatment.name, " added to user_treatment db."
+
+    db.session.commit()
+
+    return redirect('/profile')
+
 
 if __name__ == "__main__":
     app.debug = True
-    app.config['DEBUG_TB_INTERCEPT_REDIRECTS']=False
+    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
     connect_to_db(app)
     DebugToolbarExtension(app)
 
