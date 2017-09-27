@@ -77,6 +77,16 @@ def login_process():
         print "login failed"
         return redirect('/login')
 
+
+@app.route('/logout')
+def log_out():
+    """logs a user out"""
+    session['user_id'] = None
+    session['logged_in'] = False
+
+    return redirect("/")
+
+
 @app.route('/profile')
 def show_profile():
     """displays profile page of logged in user"""
