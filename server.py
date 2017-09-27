@@ -1,7 +1,9 @@
 from jinja2 import StrictUndefined
 from flask import Flask, render_template, request, flash, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
-from model import connect_to_db, db, User, Symptom, Treatment
+from model import connect_to_db, db, User, Symptom, Treatment, UserSymptom
+from model import UserTreatment, SymptomEntry, TreatmentEntry
+
 
 
 app = Flask(__name__)
@@ -73,7 +75,7 @@ def login_process():
         return redirect('/profile')
 
     else:
-        flash("Login failed, please try again")
+        flash("Your email or password do not match our records, please try again")
         print "login failed"
         return redirect('/login')
 
@@ -107,11 +109,51 @@ def show_profile():
         flash("You must be logged in to access this page")
         return redirect('/login')
 
+@app.route('/set_symptom', methods=["GET"])
+def show_set_symptoms():
+    """Shows set symptoms page"""
+
+    return render_template('/set_symptom.html')
+
+
+@app.route('/set_symptom', methods=["POST"])
+def set_new_symptom():
+    """Adds a user-generated symptom to the user_symptom table.
+        If not already there, also created new Symptom and adds to symptoms table.
+    """
+
+    symptom = request.form.get("symptom")
+    print "Symptom captured from form is", symptom
+    user = session['user_id']
+    symptoms_master_list = db.session.query(Symptom.name).all()
+    print
+    print "Symptom master list is", symptoms_master_list
+
+    if symptom in symptoms_master_list:
+        symptom = Symptom.query.filter_by(name=symptom)
+        user_symptom = UserSymptom(symptom_id=symptom.symptom_id, user_id=user)
+        db.session.add(user_symptom)
+        print
+        print symptom.name, "added to user_symptom db."
+
+    else:
+        symptom = Symptom(name=symptom)
+        db.session.add(symptom)
+        symptom_id = db.session.query(Symptom.symptom_id).filter_by(name=symptom.name)
+        user_symptom = UserSymptom(symptom_id=symptom_id, user_id=user)
+        db.session.add(user_symptom)
+        print
+        print "New ", symptom, " added to user_symptom db."
+
+    db.session.commit()
+
+    return redirect('/profile')
 
 
 
 if __name__ == "__main__":
     app.debug = True
+    DEBUG_TB_INTERCEPT_REDIRECTS=False
     connect_to_db(app)
     DebugToolbarExtension(app)
 

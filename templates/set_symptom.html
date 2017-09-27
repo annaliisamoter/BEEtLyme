@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Set a new symptom to track</h1>
+
+<h6>You can select from the preset list of symptoms through the autofill feature in the search box, or add your own customized symptom if you don't find what you are looking for.</h6>
+
+<form action='/set_symptom' method="POST">
+
+    <input type='text' name='symptom' value='search'>
+    <input type='submit' value='submit'>
+
+</form>
+
+{% endblock %}
