@@ -270,7 +270,7 @@ def add_treatment_entries():
 
 
 @app.route('/graph_options', methods=["GET"])
-def shows_graph_options_page():
+def show_graph_options_page():
     """Shows the page where users can choose what to graph."""
     user = session['user_id']
     symptom_options = UserSymptom.query.filter(UserSymptom.user_id == user).all()
@@ -279,6 +279,21 @@ def shows_graph_options_page():
     return render_template('/graph_options.html', symptom_options=symptom_options,
                                                 treatment_options=treatment_options)
 
+
+@app.route('/graph_options', methods=["POST"])
+def get_graph_options():
+    """Gets the symptoms the user wishes to track."""
+
+    user = session['user_id']
+    graph_options = request.form.getlist('symptom')
+    print graph_options
+    list_of_graph_objects = []
+    #need to find out what type of format or data structure I need for graphing interface.
+
+    for option in graph_options:
+        symptom_obj = UserSymptom.query.filter(Symptom)
+
+    return redirect('/profile')
 
 
 
