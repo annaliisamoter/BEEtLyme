@@ -22,14 +22,14 @@ def index():
 
 @app.route('/register', methods=["GET"])
 def register_form():
-    """ renders registration form """
+    """ Renders registration form """
 
     return render_template("register_form.html")
 
 
 @app.route('/register', methods=["POST"])
 def register_process():
-    """ checks if user is registered, if not adds new user to database """
+    """ Checks if user is registered, if not adds new user to database """
 
     fname = request.form.get('fname')
     lname = request.form.get('lname')
@@ -54,14 +54,14 @@ def register_process():
 
 @app.route('/login', methods=["GET"])
 def login_display():
-    """ return login page """
+    """ Returns login page """
 
     return render_template('login.html')
 
 
 @app.route('/login', methods=["POST"])
 def login_process():
-    """ validate email & pass & stores in session """
+    """ Validates email & pass & stores in session """
     email = request.form.get("email")
     password = request.form.get("password")
 
@@ -83,7 +83,7 @@ def login_process():
 
 @app.route('/logout')
 def log_out():
-    """logs a user out"""
+    """Logs a user out"""
     session['user_id'] = None
     session['logged_in'] = False
 
@@ -92,7 +92,7 @@ def log_out():
 
 @app.route('/profile')
 def show_profile():
-    """displays profile page of logged in user"""
+    """Displays profile page of logged in user"""
 
     if session['user_id']:
         u = session['user_id']
@@ -129,14 +129,13 @@ def set_new_symptom():
     print
 
     for symp in symptoms_master_list:
-        print symp
 
         if symptom in symp:
             symptom = Symptom.query.filter_by(name=symptom).first()
             user_symptom = UserSymptom(symptom_id=symptom.symptom_id, user_id=user)
             db.session.add(user_symptom)
             print
-            print "Existing ", symptom.name, "added to user_symptom db."
+            print "Existing Symptom: ", symptom.name, ", added to user_symptom db."
             break
 
     else:
@@ -146,7 +145,7 @@ def set_new_symptom():
         user_symptom = UserSymptom(symptom_id=symptom_id, user_id=user)
         db.session.add(user_symptom)
         print
-        print "New ", symptom.name, " added to user_symptom db."
+        print "New Symptom: ", symptom.name, ", added to user_symptom db."
 
     db.session.commit()
 
@@ -174,28 +173,114 @@ def set_new_treatment():
     print
 
     for treat in treatments_master_list:
-        print treat
 
         if treatment in treat:
             treatment = Treatment.query.filter_by(name=treatment).first()
             user_treatment = UserTreatment(treatment_id=treatment.treatment_id, user_id=user)
             db.session.add(user_treatment)
             print
-            print "Existing ", treatment.name, " added to user_treatment db."
+            print "Existing Treatment: ", treatment.name, ", added to user_treatment db."
             break
 
     else:
         treatment = Treatment(name=treatment)
         db.session.add(treatment)
-        treatment_id = db.session.query(Treatment.treatment_id).filter_by(name=treatment.name)
+        treatment_id = db.session.query(Treatment.treatment_id).filter_by(
+                                                        name=treatment.name)
         user_treatment = UserTreatment(treatment_id=treatment_id, user_id=user)
         db.session.add(user_treatment)
         print
-        print "New ", treatment.name, " added to user_treatment db."
+        print "New Treatment: ", treatment.name, ", added to user_treatment db."
 
     db.session.commit()
 
     return redirect('/profile')
+
+
+@app.route('/track_symptoms', methods=["GET"])
+def show_track_symptoms():
+    """Shows track symptoms page"""
+
+    user = session['user_id']
+    symptoms = UserSymptom.query.filter(UserSymptom.user_id == user).all()
+
+    return render_template('/track_symptoms.html', symptoms=symptoms)
+
+
+@app.route('/track_symptoms', methods=["POST"])
+def add_symptom_entries():
+    """Takes in the values given by the user for symptoms and adds entries to
+        symptom_entries table.
+    """
+
+    user = session['user_id']
+    symptoms = request.form.items()
+    print "This is from the request.form: ", symptoms
+
+    for key, value in symptoms:
+        print key, value
+        symptom_name = key
+        symptom_id = db.session.query(Symptom.symptom_id).filter(
+                                        Symptom.name == symptom_name).first()
+        score = int(value)
+        user_symp_id = db.session.query(UserSymptom.user_symp_id).filter(
+                                                UserSymptom.user_id== user,
+                                                UserSymptom.symptom_id == symptom_id).first()
+        symptom_entry = SymptomEntry(user_symp_id=user_symp_id, value=score)
+        db.session.add(symptom_entry)
+
+    db.session.commit()
+    return redirect('/profile')
+
+
+@app.route('/track_treatments', methods=["GET"])
+def show_track_treatments():
+    """Shows track treatments page"""
+
+    user = session['user_id']
+    treatments = UserTreatment.query.filter(UserTreatment.user_id == user).all()
+
+    return render_template('/track_treatments.html', treatments=treatments)
+
+
+@app.route('/track_treatments', methods=["POST"])
+def add_treatment_entries():
+    """Takes in the values given by the user for symptoms and adds entries to
+        symptom_entries table.
+    """
+
+    user = session['user_id']
+    treatments = request.form.items()
+    print "This is from the request.form: ", treatments
+
+    for key, value in treatments:
+        print key, value
+        treatment_name = key
+        treatment_id = db.session.query(Treatment.treatment_id).filter(
+                                        Treatment.name == treatment_name).first()
+        score = int(value)
+        user_treat_id = db.session.query(UserTreatment.user_treat_id).filter(
+                                        UserTreatment.user_id == user,
+                                        UserTreatment.treatment_id == treatment_id).first()
+        treatment_entry = TreatmentEntry(user_treat_id=user_treat_id, value=score)
+        db.session.add(treatment_entry)
+
+    db.session.commit()
+    return redirect('/profile')
+
+
+@app.route('/graph_options', methods=["GET"])
+def shows_graph_options_page():
+    """Shows the page where users can choose what to graph."""
+    user = session['user_id']
+    symptom_options = UserSymptom.query.filter(UserSymptom.user_id == user).all()
+    treatment_options = UserTreatment.query.filter(UserTreatment.user_id == user).all()
+
+    return render_template('/graph_options.html', symptom_options=symptom_options,
+                                                treatment_options=treatment_options)
+
+
+
 
 
 if __name__ == "__main__":

@@ -7,17 +7,13 @@
 <body>
 
   <hr>
-  <h6>BEEtLyme</h6>
-    <!-- {% if "logged_in" in session %}
-        <a href="/logout">Logout</a>
-    {% else %}
-        <a href="/login">Login</a>
-    {% endif %}
- -->
-    <a href="/profile">Profile</a>
-    <a href="/set_symptom">Set Symptom</a>
-    <a href="/set_treatment">Set Treatment</a>
-
+    <p>BEEtLyme
+      <a href="/profile">Profile</a>
+      <a href="/set_symptom">Set Symptom</a>
+      <a href="/set_treatment">Set Treatment</a>
+      <a href="/track_symptoms">Track Symptoms</a>
+      <a href="/track_treatments">Track Treatments</a>
+    </p>
   <hr>
 
     {% for flash in get_flashed_messages() %}

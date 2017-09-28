@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3>Track your symptoms.</h3>  
+<h4>For each symptom, enter a value between 0 and 10 to reflect today's intensity of that symptom.  A zero would indicate the symptom is completely absent this day, and a 10 is the most intense manifestation of the symptom you can imagine.</h4>
+
+
+<form action='/track_symptoms' method="POST">
+    <ul>
+    {% for symptom in symptoms %}
+    <li>{{ symptom.symptom.name }} :<input type='text' name='{{ symptom.symptom.name }}'></li>
+    {% endfor %}
+    </ul>
+    <input type='submit' value='submit'>
+</form>
+
+{% endblock %}
