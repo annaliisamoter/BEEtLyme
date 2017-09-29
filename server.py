@@ -284,16 +284,14 @@ def show_graph_options_page():
 def get_graph_options():
     """Gets the symptoms the user wishes to track."""
 
-    user = session['user_id']
+    # user = session['user_id']
     graph_options = request.form.getlist('symptom')
     print graph_options
-    list_of_graph_objects = []
-    #need to find out what type of format or data structure I need for graphing interface.
+    
+    
+    return render_template('/chart.html', graph_options=graph_options)
 
-    for option in graph_options:
-        symptom_obj = UserSymptom.query.filter(Symptom)
 
-    return redirect('/profile')
 
 
 

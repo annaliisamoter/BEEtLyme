@@ -1,9 +1,0 @@
-Annabelle|Akkerman|annabelle@gmail.com|password123
-Bernadette|Bush|bernadette@gmail.com|password456
-Catherine|Cushings|catherine@gmail.com|password789
-Deirdre|Dumbledore|deirdre@gmail.com|123password
-Erika|Evers|erika@gmail.com|456password
-Fiona|Finnigan|fiona@gmail.com|789password
-Gina|Grindel|gina@gmail.com|pass123word
-Heidi|Hearts|heidi!gmail.com|pass456word
-Ina|Inniskillin|ina@gmail.com|pass789word
