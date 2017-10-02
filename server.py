@@ -3,8 +3,9 @@ from flask import Flask, render_template, request, flash, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
 from model import connect_to_db, db, User, Symptom, Treatment, UserSymptom
 from model import UserTreatment, SymptomEntry, TreatmentEntry
-
-
+import gviz_api
+import helper
+import json
 
 app = Flask(__name__)
 
@@ -284,16 +285,28 @@ def show_graph_options_page():
 def get_graph_options():
     """Gets the symptoms the user wishes to track."""
 
-    # user = session['user_id']
+    user = session['user_id']
     graph_options = request.form.getlist('symptom')
-    print graph_options
-    
-    
+    #data_rows = helper.run_entry_queries(graph_options, user)
+    print "these are the graph options captured from user:", graph_options
+
     return render_template('/chart.html', graph_options=graph_options)
 
 
+@app.route('/get_data', methods=['GET'])
+def assemble_graph_data():
+    """queries db and properly formats a json to seed graph data."""
 
+    user_id = session['user_id']
+    graph_options = request.args.get('graph_options')
+    graph_options = json.loads(graph_options)
+    print "this message is generated before the data_dict funct is called."
+    data_dict = helper.run_entry_queries(graph_options, user_id)
+    print "This is the data_dict from inside the get_data route"
+    data_json = helper.create_data_table(graph_options, data_dict)
+    print "this is a message from the 'get_data' app route"
 
+    return data_json
 
 
 if __name__ == "__main__":
