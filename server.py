@@ -300,11 +300,8 @@ def assemble_graph_data():
     user_id = session['user_id']
     graph_options = request.args.get('graph_options')
     graph_options = json.loads(graph_options)
-    print "this message is generated before the data_dict funct is called."
     data_dict = helper.run_entry_queries(graph_options, user_id)
-    print "This is the data_dict from inside the get_data route"
     data_json = helper.create_data_table(graph_options, data_dict)
-    print "this is a message from the 'get_data' app route"
 
     return data_json
 
