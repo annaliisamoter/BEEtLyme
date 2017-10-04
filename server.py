@@ -1,9 +1,8 @@
 from jinja2 import StrictUndefined
-from flask import Flask, render_template, request, flash, redirect, session
+from flask import Flask, render_template, request, flash, redirect, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from model import connect_to_db, db, User, Symptom, Treatment, UserSymptom
 from model import UserTreatment, SymptomEntry, TreatmentEntry
-import gviz_api
 import helper
 import json
 
@@ -114,6 +113,24 @@ def show_set_symptoms():
     """Shows set symptoms page"""
 
     return render_template('/set_symptom.html')
+
+
+@app.route('/auto_symptom', methods=['GET'])
+def set_auto_complete():
+    """Handles autocomplete ajax request"""
+    print "this is printing from the auto_symptom app route"
+
+    results = []
+    
+    symptoms = db.session.query(Symptom.name).all()
+    options = [symptom.name for symptom in symptoms]
+    # print "these are all the symptoms:", options
+    # for option in options:
+    #     mini_dict = {}
+    #     mini_dict["name"] = option
+    #     results.append(mini_dict)
+    # print results
+    return jsonify(options)
 
 
 @app.route('/set_symptom', methods=["POST"])
