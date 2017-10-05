@@ -3,12 +3,37 @@
 
 <h1>Set a new treatment to track</h1>
 
+<script src="https://code.jquery.com/jquery.js"></script>
+<link type='text/css' href="path/to/easy-autocomplete.css">
+<link type='text/css' href="path/to/easy-autocomplete.themes.css">
+<script src="/static/jquery.easy-autocomplete.js"></script>
 
 <form action='/set_treatment' method="POST">
 
-    <input type='text' name='treatment' value='search'>
+    <input type='text' id='autocomplete' name='treatment' placeholder='search'>
     <input type='submit' value='submit'>
 
 </form>
+<script>
 
+
+$.get('/auto_treatment', function(treatments){
+
+
+    console.log(treatments);
+
+    var options = {
+        data: treatments,
+        list: {
+            match: {
+                enabled: true
+            }
+        }
+    };
+
+    $("#autocomplete").easyAutocomplete(options);
+
+})
+</script>
+    
 {% endblock %}

@@ -116,20 +116,13 @@ def show_set_symptoms():
 
 
 @app.route('/auto_symptom', methods=['GET'])
-def set_auto_complete():
+def set_auto_complete_symp():
     """Handles autocomplete ajax request"""
     print "this is printing from the auto_symptom app route"
 
-    results = []
-    
     symptoms = db.session.query(Symptom.name).all()
     options = [symptom.name for symptom in symptoms]
-    # print "these are all the symptoms:", options
-    # for option in options:
-    #     mini_dict = {}
-    #     mini_dict["name"] = option
-    #     results.append(mini_dict)
-    # print results
+
     return jsonify(options)
 
 
@@ -175,6 +168,16 @@ def show_set_treatment():
     """Shows set treatment page"""
 
     return render_template('/set_treatment.html')
+
+@app.route('/auto_treatment', methods=['GET'])
+def set_auto_complete_treat():
+    """Handles autocomplete ajax request"""
+    print "this is printing from the auto_symptom app route"
+
+    treatments = db.session.query(Treatment.name).all()
+    options = [treatment.name for treatment in treatments]
+
+    return jsonify(options)
 
 
 @app.route('/set_treatment', methods=["POST"])

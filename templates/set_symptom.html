@@ -8,10 +8,6 @@
 <script src="/static/jquery.easy-autocomplete.js"></script>
 
 
-<!-- <link type='text/css' src="/static/jquery.auto-complete.css"></link>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-autocomplete/1.0.7/jquery.auto-complete.js"></script>
-<script src="/static/jquery.auto-complete.js"></script> -->
 <form action='/set_symptom' method="POST">
 
     <input type='text' id='autocomplete' name='symptom' placeholder='search'>
@@ -20,44 +16,27 @@
 </form>
 
 <script>
-// var options = $.ajax({
-//           url: "/auto_symptom",
-//           data: $('#autocomplete').val()
-//           async: false
-//           }).responseText;
 
-// console.log(options)
 
 $.get('/auto_symptom', function(symptoms){
 
 
     console.log(symptoms);
 
-    var options = {data: symptoms};
+    var options = {
+        data: symptoms,
+        list: {
+            match: {
+                enabled: true
+            }
+        }
+    };
 
     $("#autocomplete").easyAutocomplete(options);
 
 })
     
 
-// $("#autocomplete").easyAutocomplete(options);
-
-// $('#autocomplete').autoComplete({key1: 'Fever', key2: 'Fatigue', key3: 'Sweats or Chills'});
-// $('#autocomplete').autoComplete({
-//     minChars: 2,
-//     source: function(term, suggest){
-//         var choices = ['Fever', 'Sweats or Chills', 'Tremors', 'Fatigue'];
-//         var matches = [];
-//         for (i=0; i<choices.length; i++)
-//             if (~choices[i].indexOf(term)) matches.push(choices[i]);
-//         suggest(matches);
-//     }
-// });
-// $('#autocomplete').autoComplete({
-//     source: function(term, response){
-//         $.getJSON('/auto_symptom/', { q: term }, function(data){ response(data); });
-//     }
-// });
 </script>
 
 
