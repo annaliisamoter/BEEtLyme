@@ -1,15 +1,78 @@
 {% extends 'base.html' %}
 {% block content %}
+<script language=”javascript” type=”text/javascript” src=”http://ajax.aspnetcdn.com/ajax/jquery.validate/1.10.0/jquery.validate.min.js”></script>
+
+
 
 <h1>Register!</h1>
 
-<form action='/register' method="POST">
-    <input type='text' name='fname' value='First Name'>
-    <input type='text' name='lname' value='Last Name'>
-    <input type='text' name='email' value='email'>
-    <input type='text' name='password' value='password'>
+<form action='/register' id='register' method="POST">
+    <input type='text' id='fname' name='fname' placeholder='First Name'>
+    <input type='text' id='lname' name='lname' placeholder='Last Name'>
+    <input type='text' id='email' name='email' placeholder='email'>
+    <input type='text' id='password' name='password' placeholder='password'>
     <input type='submit' value='register'>
 
 </form>
-
+<script>
+$(function() {
+   $( “#register” ).validate({
+           rules: {
+                   fname: {
+                           required: true,
+                           minlength: 3,
+                           maxlength: 20,
+                           customvalidation: true
+                   }
+                   lname: {
+                           required: true,
+                           minlength: 3,
+                           maxlength: 20,
+                           customvalidation: true
+                   }
+                   email: {
+                           required: true,
+                           minlength: 10,
+                           maxlength: 60,
+                           customvalidation: false
+                   }
+                   password: {
+                           required: true,
+                           minlength: 8,
+                           maxlength: 16,
+                           customvalidation: false
+                   }
+           },
+           messages: {
+                   fname: {
+                           required: “Please enter your first name”,
+                           minlength: $.format(“Please enter at least {0} characters”),
+                           maxlength: $.format(“Maximum {0} characters allowed.”)
+                   }
+                   lname: {
+                           required: “Please enter your last name”,
+                           minlength: $.format(“Please enter at least {0} characters”),
+                           maxlength: $.format(“Maximum {0} characters allowed.”)
+                   }
+                   email: {
+                           required: “Please enter your email address”,
+                           minlength: $.format(“Please enter at least {0} characters”),
+                           maxlength: $.format(“Maximum {0} characters allowed.”)
+                   }
+                   password: {
+                           required: "Please enter a password between 8 and 16 characters",
+                           minlength: $.format("Please enter at least {0} characters"),
+                           maxlength: $.format("Maximum {0} characters allowed.")
+                   }
+           }
+           }
+   });
+   $.validator.addMethod(“customvalidation”,
+           function(value, element) {
+                   return /^[A-Za-z\d=#$%@_ -]+$/.test(value);
+           },
+   “Sorry, no special characters allowed”
+   );
+});
+</script>
 {% endblock %}

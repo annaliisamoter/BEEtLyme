@@ -61,6 +61,41 @@ def create_data_table(graph_options, graph_data_dict):
     return result
 
 
+def plotly_helper_1(symptom_option, user_id):
+    """Query db for plotly graph
+        Takes a graph_option and user_id passed in from graph options url.
+        Return a dict ready for trace implementation.
+          example:       
+          {
+          type: "scatter",
+          mode: "lines",
+          name: 'Symptom 1',
+          x: [datetime objects],
+          y: [corresponding symptom values],
+        }
+    """
+    entry_objects = SymptomEntry.query.join(UserSymptom, Symptom).filter(
+        UserSymptom.user_id == user_id, Symptom.name == option).order_by(SymptomEntry.created_at).all()
+    return {
+        'mode': 'lines+markers',
+        'name': symptom_option,
+        'line': {'shape': 'linear'},
+        'type': 'scatter',
+        'x':  [datetime.date(entry_obj.created_at) for entry_obj in entry_objects],
+        'y': [entry_obj.value for entry_obj in entry_objects],
+    }
+    
+
+
+
+def plotly_helper_2(treatment_option, user_id):
+    """query returning strings of dates and values"""
+
+    entries_list_pl = []
+    for option
+
+
+
 if __name__ == "__main__":
 
     from server import app

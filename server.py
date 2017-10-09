@@ -67,11 +67,16 @@ def login_process():
 
     q = db.session.query(User).filter(User.email == email).first()
 
-    if q and q.password == password:
+    if q.user_id == session['user_id']:
+        flash("You are already logged in")
+        print "User already logged in"
+        return redirect('profile')
+
+    elif q and q.password == password:
         print q, q.password
         session['user_id'] = q.user_id
         session['logged_in'] = True
-        flash("You are logged in!")
+        flash("Login successful. Welcome back.")
         print "login success"
         return redirect('/profile')
 
@@ -86,6 +91,7 @@ def log_out():
     """Logs a user out"""
     session['user_id'] = None
     session['logged_in'] = False
+    flash("You have logged out.  Goodbye.")
 
     return redirect("/")
 
@@ -98,7 +104,6 @@ def show_profile():
         u = session['user_id']
         q = User.query.filter(User.user_id == u).first()
         symptoms = q.user_symptom
-        #list of symptom objects
         treatments = q.user_treatment
 
         return render_template('/profile.html', user=q, symptoms=symptoms, treatments=treatments)
@@ -134,11 +139,18 @@ def set_new_symptom():
 
     symptom = request.form.get("symptom")
     symptom = symptom.capitalize()
-    print "Symptom captured from form is", symptom
+    print "Symptom captured from set-symptom form is", symptom
+
     user = session['user_id']
     symptoms_master_list = db.session.query(Symptom.name).all()
-    print
+    user_symptoms = db.session.query(UserSymptom).filter(UserSymptom.user_id == user).all()
+    user_symptom_names = [symptoms.symptom.name for symptoms in user_symptoms]
 
+    # if symptom in user_symptom_names:
+    #     flash("You are already tracking that symptom.")
+    #     return redirect('/profile')
+
+    # elif symptom not in user_symptom_names:
     for symp in symptoms_master_list:
 
         if symptom in symp:
@@ -188,11 +200,17 @@ def set_new_treatment():
 
     treatment = request.form.get("treatment")
     treatment = treatment.capitalize()
-    print "Treatment captured from form is", treatment
+    print "Treatment captured from set-treatment form is", treatment
     user = session['user_id']
     treatments_master_list = db.session.query(Treatment.name).all()
-    print
+    user_treatments = db.session.query(UserTreatment).filter(UserTreatment.user_id == user).all()
+    user_treatment_names = [treatments.treatment.name for treatments in user_treatments]
 
+    # if treatment in user_treatment_names:
+    #     flash("You are already tracking that treatment.")
+    #     return redirect('/profile')
+
+    # elif treatment not in user_treatment_names:
     for treat in treatments_master_list:
 
         if treatment in treat:
@@ -310,10 +328,10 @@ def get_graph_options():
     #data_rows = helper.run_entry_queries(graph_options, user)
     print "these are the graph options captured from user:", graph_options
 
-    return render_template('/chart.html', graph_options=graph_options)
+    return render_template('/chart_2.html', graph_options=graph_options)
 
 
-@app.route('/get_data', methods=['GET'])
+@app.route('/graph_data', methods=['GET'])
 def assemble_graph_data():
     """queries db and properly formats a json to seed graph data."""
 
