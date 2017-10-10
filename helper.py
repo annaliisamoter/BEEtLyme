@@ -67,11 +67,11 @@ def plotly_helper_1(symptom_option, user_id):
         Return a dict ready for trace implementation.
           example:
           {
-          type: "scatter",
-          mode: "lines",
-          name: 'Symptom 1',
-          x: [datetime objects],
-          y: [corresponding symptom values],
+          'type': "scatter",
+          'mode': "lines",
+          'name': 'Symptom 1',
+          'x': [datetime objects],
+          'y': [corresponding symptom values],
         }
     """
     entry_objects = SymptomEntry.query.join(UserSymptom, Symptom).filter(UserSymptom.user_id == user_id, Symptom.name == symptom_option).order_by(SymptomEntry.created_at).all()
@@ -79,13 +79,12 @@ def plotly_helper_1(symptom_option, user_id):
         'type': 'scatter',
         'mode': 'lines',
         'name': symptom_option,
-        'line': {'shape': 'linear',
-                    'color': 'red'},
+        'line': {'shape': 'linear'},
         'showlegend': 'true',
-        'x':  [datetime.date(entry_obj.created_at) for entry_obj in entry_objects],
+        'x':  [entry_obj.created_at.strftime("%Y-%m-%d") for entry_obj in entry_objects],
         'y': [entry_obj.value for entry_obj in entry_objects]
     }
-  
+
 
 
 

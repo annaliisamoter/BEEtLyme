@@ -9,50 +9,50 @@
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <div id="myDiv"></div>
 <script>
-Plotly.d3.csv("https://raw.githubusercontent.com/plotly/datasets/master/finance-charts-apple.csv", function(err, rows){
+// Plotly.d3.csv("https://raw.githubusercontent.com/plotly/datasets/master/finance-charts-apple.csv", function(err, rows){
 
-  function unpack(rows, key) {
-  return rows.map(function(row) { return row[key]; });
-}
+//   function unpack(rows, key) {
+//   return rows.map(function(row) { return row[key]; });
+// }
 
 
-// var jsonData = $.ajax({
-//           url: "/graph_data",
-//           data: {graph_options: $('#hidden').val()},
-//           dataType: "json",
-//           async: false
-//           }).responseText;
+var jsonData = $.ajax({
+          url: "/graph_data",
+          data: {graph_options: $('#hidden').val()},
+          dataType: "json",
+          async: false
+          }).responseText;
   
-var trace1 = {
-  type: "scatter",
-  mode: "lines",
-  name: 'Symptom 1',
-  line: {'shape': 'linear'},
-  x: unpack(rows, 'Date'),
-  y: unpack(rows, 'AAPL.High'),
-  line: {color: '#17BECF'}
-}
+// var trace1 = {
+//   type: "scatter",
+//   mode: "lines",
+//   name: 'Symptom 1',
+//   line: {'shape': 'linear'},
+//   x: unpack(rows, 'Date'),
+//   y: unpack(rows, 'AAPL.High'),
+//   line: {color: '#17BECF'}
+// }
 
-var trace2 = {
-  type: "scatter",
-  mode: "lines",
-  name: 'Symptom 2',
-  x: unpack(rows, 'Date'),
-  y: unpack(rows, 'AAPL.Low'),
-  line: {color: '#7F7F7F'}
-}
+// var trace2 = {
+//   type: "scatter",
+//   mode: "lines",
+//   name: 'Symptom 2',
+//   x: unpack(rows, 'Date'),
+//   y: unpack(rows, 'AAPL.Low'),
+//   line: {color: '#7F7F7F'}
+// }
 
-var data = [trace1,trace2];
+// var data = [trace1,trace2];
 
 
-// var data = JSON.parse(jsonData).data
-// console.log(data)
+var data = JSON.parse(jsonData).data
+console.log(data)
 
 var layout = {
   title: 'Symptoms over Time', 
   xaxis: {
     autorange: true, 
-    range: ['2015-02-17', '2017-10-9'], 
+    range: ['2017-02-17', '2017-10-9'], 
     rangeselector: {buttons: [
         {
           count: 1, 
@@ -74,18 +74,18 @@ var layout = {
         }, 
         {step: 'all'}
       ]}, 
-    rangeslider: {range: ['2015-02-17', '2017-10-9']}, 
+    rangeslider: {range: ['2017-02-17', '2017-10-9']}, 
     type: 'date'
   }, 
   yaxis: {
     autorange: true, 
-    range: [86.8700008333, 138.870004167], 
+    range: [0, 16], 
     type: 'linear'
   }
 };
 
 Plotly.newPlot('myDiv', data, layout);
-})
+// })
 </script>
 
 {% endblock %}
