@@ -2,7 +2,7 @@
 {% block content %}
 
 <h3>Graphing options.</h3>
-<h4>  Choose up to three symptoms to graph over time.</h4>
+<h4>  Choose up to three symptoms and one treatment to graph over time.</h4>
 <!-- Add constraint in on JS side -->
 
 
@@ -12,7 +12,13 @@
     <li>{{ symptom.symptom.name }} <input type=checkbox name='symptom' value="{{ symptom.symptom.name }}"></li>
     {% endfor %}
     </ul>
+    {% for treatment in treatment_options %}
+    <li>{{ treatment.treatment.name }} <input type=checkbox name='treatment' value="{{ treatment.treatment.name }}"></li>
+    {% endfor %}
     <input type='submit' value='submit'>
+
 </form>
+
+
 
 {% endblock %}

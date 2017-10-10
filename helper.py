@@ -79,17 +79,37 @@ def plotly_helper_1(symptom_option, user_id):
         'type': 'scatter',
         'mode': 'lines',
         'name': symptom_option,
-        'line': {'shape': 'linear'},
+        'line': {'shape': 'spline'},
         'showlegend': 'true',
         'x':  [entry_obj.created_at.strftime("%Y-%m-%d") for entry_obj in entry_objects],
         'y': [entry_obj.value for entry_obj in entry_objects]
     }
 
 
+def plotly_helper_treat(treatment_option, user_id):
+    """Query db for plotly graph
+        Takes a graph_option and user_id passed in from graph options url.
+        Return a dict ready for trace implementation.
+          example:
+          {
+          'type': "scatter",
+          'mode': "lines",
+          'name': 'Symptom 1',
+          'x': [date string],
+          'y': [corresponding treatment values],
+        }
+    """
+    entry_objects = TreatmentEntry.query.join(UserTreatment, Treatment).filter(UserTreatment.user_id == user_id, Treatment.name == treatment_option).order_by(TreatmentEntry.created_at).all()
+    return {
+        'type': 'scatter',
+        'mode': 'lines',
+        'name': treatment_option,
+        'line': {'shape': 'spline'},
+        'showlegend': 'true',
+        'x':  [entry_obj.created_at.strftime("%Y-%m-%d") for entry_obj in entry_objects],
+        'y': [entry_obj.value for entry_obj in entry_objects]
+    }
 
-
-# def plotly_helper_2(treatment_option, user_id):
-#     """query returning strings of dates and values"""
 
 
 

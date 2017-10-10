@@ -2,7 +2,8 @@
 {% block content %}
 <form action='/graph_data'>
     
-    <input type='hidden' id='hidden' name='graph_options' value='{{ graph_options | tojson | safe }}'>
+    <input type='hidden' id='symptom' name='graph_options' value='{{ symptom_options | tojson | safe }}'>
+    <input type='hidden' id='treatment' name='graph_options' value='{{ treatment_option | tojson | safe }}'>
     
   </form>
 
@@ -18,7 +19,8 @@
 
 var jsonData = $.ajax({
           url: "/graph_data",
-          data: {graph_options: $('#hidden').val()},
+          data: {symptom_options: $('#symptom').val(), 
+                treatment_option: $('#treatment').val()},
           dataType: "json",
           async: false
           }).responseText;
