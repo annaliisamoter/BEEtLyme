@@ -336,7 +336,7 @@ def get_graph_options():
 @app.route('/graph_data', methods=['GET'])
 def assemble_graph_data():
     """queries db and properly formats a json to seed graph data."""
-    print "inside the graph_data route"
+    
     user_id = session['user_id']
     symptom_options = request.args.get('symptom_options')
     treatment_option = request.args.get('treatment_option')
@@ -348,17 +348,13 @@ def assemble_graph_data():
 
     if len(symptom_options) > 1:
         for option in symptom_options:
-            print "working on first option", option
             trace_data = helper.plotly_helper_1(option, user_id)
             total_data['data'].append(trace_data)
     else:
-        print "just one symptom to plot"
         total_data['data'].append(helper.plotly_helper_1(symptom_options[0], user_id))
 
-    treatment_entries = helper.plotly_helper_treat(treatment_option, user_id)
-    print "treatment_entries from inside graph_data route", treatment_entries
-
-    total_data['data'].append(treatment_entries)
+    #treatment_entries = helper.plotly_helper_treat(treatment_option, user_id)
+    total_data['data'].append(helper.plotly_helper_treat(treatment_option, user_id))
 
     print total_data
     return jsonify(total_data)

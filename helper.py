@@ -100,15 +100,28 @@ def plotly_helper_treat(treatment_option, user_id):
         }
     """
     entry_objects = TreatmentEntry.query.join(UserTreatment, Treatment).filter(UserTreatment.user_id == user_id, Treatment.name == treatment_option).order_by(TreatmentEntry.created_at).all()
-    return {
-        'type': 'scatter',
-        'mode': 'lines',
-        'name': treatment_option,
-        'line': {'shape': 'spline'},
-        'showlegend': 'true',
-        'x':  [entry_obj.created_at.strftime("%Y-%m-%d") for entry_obj in entry_objects],
-        'y': [entry_obj.value for entry_obj in entry_objects]
-    }
+
+    if treatment_option == 'Bee Venom':
+        return {
+            'type': 'scatter',
+            'mode': 'lines',
+            'name': treatment_option,
+            'line': {'shape': 'spline'},
+            'showlegend': 'true',
+            'x':  [entry_obj.created_at.strftime("%Y-%m-%d") for entry_obj in entry_objects],
+            'y': [entry_obj.value for entry_obj in entry_objects],
+        }
+    else:
+        return {
+            'type': 'scatter',
+            'mode': 'lines',
+            'name': treatment_option,
+            'line': {'shape': 'spline'},
+            'showlegend': 'true',
+            'x':  [entry_obj.created_at.strftime("%Y-%m-%d") for entry_obj in entry_objects],
+            'y': [entry_obj.value for entry_obj in entry_objects],
+            'yaxis': 'y2',
+        }
 
 
 
