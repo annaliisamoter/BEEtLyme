@@ -334,14 +334,27 @@ def get_graph_options():
 @app.route('/graph_data', methods=['GET'])
 def assemble_graph_data():
     """queries db and properly formats a json to seed graph data."""
-
+    print "inside the graph_data route"
     user_id = session['user_id']
     graph_options = request.args.get('graph_options')
+    print "graph_options from inside graph_data route", graph_options
     graph_options = json.loads(graph_options)
-    data_dict = helper.run_entry_queries(graph_options, user_id)
-    data_json = helper.create_data_table(graph_options, data_dict)
 
-    return data_json
+    total_data = {'data': []}
+
+    if len(graph_options) > 1:
+        for option in graph_options:
+            print "working on first option", option
+            trace_data = helper.plotly_helper_1(option, user_id)
+            total_data['data'].append(trace_data)
+    else:
+        print "just one symptom to plot"
+        total_data['data'].append(helper.plotly_helper_1(graph_options[0], user_id))
+    # the code below is for the google material chart
+        # data_dict = helper.run_entry_queries(graph_options, user_id)
+    # data_json = helper.create_data_table(graph_options, data_dict)
+    print total_data
+    return jsonify(total_data)
 
 
 if __name__ == "__main__":

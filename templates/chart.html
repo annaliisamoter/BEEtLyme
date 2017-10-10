@@ -15,7 +15,7 @@
 
       function drawChart() {
         var jsonData = $.ajax({
-          url: "/get_data",
+          url: "/graph_data",
           data: {graph_options: $('#hidden').val()},
           dataType: "json",
           async: false
