@@ -1,6 +1,6 @@
 from sqlalchemy import func
 from model import User, Treatment, Symptom, connect_to_db, db
-from model import UserTreatment, UserSymptom, SymptomEntry, TreatmentEntry
+from model import UserTreatment, UserSymptom, SymptomEntry, TreatmentEntry, FullMoon, NewMoon
 from server import app
 from datetime import datetime
 
@@ -128,6 +128,39 @@ def load_fake_treatment_entries():
     db.session.commit()
 
 
+def load_full_moons():
+    """Seeds FullMoon table in db"""
+    print "FullMoon"
+
+    #FullMoon.query.delete()
+
+    for row in open("seed_data/moon_phases.txt"):
+        row = row.rstrip()
+        full_moon_date, new_moon = row.split("|")
+        full_moon_date = datetime.strptime(full_moon_date, '%b %d, %Y')
+        full_moon = FullMoon(full_moon_date=full_moon_date)
+        db.session.add(full_moon)
+
+    db.session.commit()
+
+
+def load_new_moons():
+    """Seeds NewMoon table in db"""
+    print "NewMoon"
+
+    #NewMoon.query.delete()
+
+    for row in open("seed_data/moon_phases.txt"):
+        row = row.rstrip()
+        full_moon_date, new_moon = row.split("|")
+        new_moon_date = datetime.strptime(new_moon, '%b %d, %Y')
+        new_moon = NewMoon(new_moon_date=new_moon_date)
+        db.session.add(new_moon)
+
+    db.session.commit()
+
+
+
 
 if __name__ == "__main__":
     connect_to_db(app)
@@ -135,7 +168,7 @@ if __name__ == "__main__":
     # In case tables haven't been created, create them
     db.create_all()
 
-    # Import different types of data
+    #Import different types of data
     load_users()
     load_symptoms()
     load_treatments()
@@ -143,3 +176,5 @@ if __name__ == "__main__":
     load_user_treatments()
     load_fake_symptom_entries()
     load_fake_treatment_entries()
+    load_full_moons()
+    load_new_moons()

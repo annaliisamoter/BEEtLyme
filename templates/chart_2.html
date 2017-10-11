@@ -10,12 +10,6 @@
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <div id="myDiv"></div>
 <script>
-// Plotly.d3.csv("https://raw.githubusercontent.com/plotly/datasets/master/finance-charts-apple.csv", function(err, rows){
-
-//   function unpack(rows, key) {
-//   return rows.map(function(row) { return row[key]; });
-// }
-
 
 var jsonData = $.ajax({
           url: "/graph_data",
@@ -25,27 +19,6 @@ var jsonData = $.ajax({
           async: false
           }).responseText;
   
-// var trace1 = {
-//   type: "scatter",
-//   mode: "lines",
-//   name: 'Symptom 1',
-//   line: {'shape': 'linear'},
-//   x: unpack(rows, 'Date'),
-//   y: unpack(rows, 'AAPL.High'),
-//   line: {color: '#17BECF'}
-// }
-
-// var trace2 = {
-//   type: "scatter",
-//   mode: "lines",
-//   name: 'Symptom 2',
-//   x: unpack(rows, 'Date'),
-//   y: unpack(rows, 'AAPL.Low'),
-//   line: {color: '#7F7F7F'}
-// }
-
-// var data = [trace1,trace2];
-
 
 var data = JSON.parse(jsonData).data
 console.log(data)
@@ -95,7 +68,7 @@ var layout = {
 };
 
 Plotly.newPlot('myDiv', data, layout);
-// })
+
 </script>
 
 {% endblock %}

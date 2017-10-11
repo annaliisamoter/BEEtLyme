@@ -161,6 +161,22 @@ class Comments(db.Model):
     deleted_at = db.Column(db.DateTime(timezone=True), nullable=True)
 
 
+class FullMoon(db.Model):
+    """defines FullMoon model"""
+
+    __tablename__ = "full_moons"
+
+    full_moon_date = db.Column(db.DateTime, primary_key=True)
+
+
+class NewMoon(db.Model):
+    """defines NewMoon model"""
+
+    __tablename__ = "new_moons"
+
+    new_moon_date = db.Column(db.DateTime, primary_key=True)
+
+
 def connect_to_db(app):
     """Connect the database to our Flask app."""
 

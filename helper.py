@@ -1,7 +1,7 @@
 """Helper functions for BEEtLyme web app"""
 
 from model import connect_to_db, db, User, Symptom, Treatment, UserSymptom
-from model import UserTreatment, SymptomEntry, TreatmentEntry
+from model import UserTreatment, SymptomEntry, TreatmentEntry, FullMoon, NewMoon
 from datetime import datetime
 import gviz_api
 
@@ -124,7 +124,52 @@ def plotly_helper_treat(treatment_option, user_id):
         }
 
 
+def get_date_range(total_data):
+    """Calculates the range of dates to get moon phases for."""
 
+    first_date = total_data['data'][0]['x'][0]
+    last_date = total_data['data'][0]['x'][-1]
+    first_date = datetime.strptime(first_date, '%Y-%m-%d')
+    last_date = datetime.strptime(last_date, '%Y-%m-%d')
+    date_range = (first_date, last_date)
+    return date_range
+
+
+def full_moon_phase_overlay(date_range):
+    """creates trace data for full moon phase graph overlay."""
+
+    dates = db.session.query(FullMoon.full_moon_date).filter(FullMoon.full_moon_date.between(date_range[0], date_range[1])).all()
+    print "dates from within the db query for full_moon phase helper function", dates
+    return {
+        'mode': 'markers',
+        'type': 'scatter',
+        'name': 'Full Moons',
+        'showlegend': 'true',
+        'marker': {
+                'color': '#d3d3d3',
+                'size': 20},
+        'x': [date[0].strftime("%Y-%m-%d") for date in dates],
+        'y': [16 for date in dates]
+        }
+
+
+def new_moon_phase_overlay(date_range):
+    """creates trace data for new moon phase graph overlay."""
+
+    dates = db.session.query(NewMoon.new_moon_date).filter(NewMoon.new_moon_date.between(date_range[0], date_range[1])).all()
+    print "dates from within the db query for new_moon phase helper function", dates
+    return {
+        'mode': 'markers',
+        'type': 'scatter',
+        'name': 'New Moons',
+        'showlegend': 'true',
+        'marker': {
+                'color': 'black',
+                'size': 20
+                },
+        'x': [date[0].strftime("%Y-%m-%d") for date in dates],
+        'y': [16 for date in dates]
+        }
 
 
 

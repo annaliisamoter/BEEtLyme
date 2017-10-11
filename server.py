@@ -2,7 +2,7 @@ from jinja2 import StrictUndefined
 from flask import Flask, render_template, request, flash, redirect, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from model import connect_to_db, db, User, Symptom, Treatment, UserSymptom
-from model import UserTreatment, SymptomEntry, TreatmentEntry
+from model import UserTreatment, SymptomEntry, TreatmentEntry, FullMoon, NewMoon
 import helper
 import json
 
@@ -181,6 +181,7 @@ def show_set_treatment():
 
     return render_template('/set_treatment.html')
 
+
 @app.route('/auto_treatment', methods=['GET'])
 def set_auto_complete_treat():
     """Handles autocomplete ajax request"""
@@ -336,7 +337,7 @@ def get_graph_options():
 @app.route('/graph_data', methods=['GET'])
 def assemble_graph_data():
     """queries db and properly formats a json to seed graph data."""
-    
+
     user_id = session['user_id']
     symptom_options = request.args.get('symptom_options')
     treatment_option = request.args.get('treatment_option')
@@ -345,16 +346,21 @@ def assemble_graph_data():
     treatment_option = json.loads(treatment_option)
 
     total_data = {'data': []}
-
+    # create trace_data for symptoms and add to total_data
     if len(symptom_options) > 1:
         for option in symptom_options:
             trace_data = helper.plotly_helper_1(option, user_id)
             total_data['data'].append(trace_data)
     else:
         total_data['data'].append(helper.plotly_helper_1(symptom_options[0], user_id))
-
-    #treatment_entries = helper.plotly_helper_treat(treatment_option, user_id)
+    # create trace_data for treatment and add to total_data
     total_data['data'].append(helper.plotly_helper_treat(treatment_option, user_id))
+
+    #add full moon and new moon traces to the total_data set:
+    date_range = helper.get_date_range(total_data)
+    print date_range
+    total_data['data'].append(helper.full_moon_phase_overlay(date_range))
+    total_data['data'].append(helper.new_moon_phase_overlay(date_range))
 
     print total_data
     return jsonify(total_data)
