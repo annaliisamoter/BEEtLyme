@@ -2,9 +2,30 @@
 {% block content %}
 <!-- <script type="text/javascript" href="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/locale/af.js"></script>
 <script type="text/javascript" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.css"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.css" rel="stylesheet" type="text/css" />
+
+<style>
+label{margin-left: 20px;}
+#datepicker{width:180px; margin: 0 20px 20px 20px;}
+#datepicker > span:hover{cursor: pointer;}
+</style>
+
 
 <div class="row">
-  <div class="col-xs-6">
+    <div class="col-xs-1"></div>
+    <div class="col-xs-10">
+        <label>Select Date: </label>
+        <div id="datepicker" class="input-group date" data-date-format="mm-dd-yyyy">
+        <input class="form-control" type="text" readonly />
+        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+    </div>
+    <div class="col-xs-1"></div>
+</div>
+
+<div class="row">
+  <div class="col-xs-2"></div>
+  <div class="col-xs-4">
     <h4>Track your Symptoms.</h4>  
         <p>For each symptom, enter a value between 0 and 10 to reflect today's intensity of that symptom.  A zero would indicate the symptom is completely absent this day, and a 10 is the most intense manifestation of the symptom you can imagine.<p>
 
@@ -17,7 +38,7 @@
             <button id='symp-submit' class="btn btn-default">Submit</button>
         </form>
   </div>
-  <div class="col-xs-6">
+  <div class="col-xs-4">
     <h4>Track your Treatments.</h4>   
         <p>For Bee Venom, enter the number of stings in a given session.  For supplements and medications, enter the dosage in milligrams or other appropriate numerical measurement.<p>
 
@@ -29,30 +50,44 @@
             </ul>
             <button id='treat-submit' class="btn btn-default">Submit</button>
         </form>
+    </div>
+    <div class="col-xs-2"></div>
 </div>
 <script>
+//function for datepicker
+$(function () {
+  $("#datepicker").datepicker({ 
+        autoclose: true, 
+        todayHighlight: true
+  }).datepicker('update', new Date());
+});
+//success function for sending success message for tracking ajax calls
 function successMessage(result) {
     alert(result);
 }
-
+//ajax call sending symptom values to app route
 function submitSymptomValues(evt) {
     evt.preventDefault();
-    var formInputs = $('#symptoms').serialize();
+    var date = $('input.form-control').val()
+    var formInputs = $('#symptoms').serialize() + "&date=" + date
     $.post("/track_symptoms", 
             formInputs,
             successMessage)
 }
+//event listener for symptom on 'submit'
 $('#symp-submit').on("click", submitSymptomValues);
 
+//ajax call for sending treatment values to app route
 function submitTreatmentValues(evt) {
     evt.preventDefault();
-    console.log("in ajax")
-    var treatFormInputs = $('#treatments').serialize()
+    var date = $('input.form-control').val()
+    var treatFormInputs = $('#treatments').serialize() + "&date=" + date
     
     $.post("/track_treatments",
             treatFormInputs,
             successMessage)
 }
+//event listener for treatment on 'submit'
 $('#treat-submit').on('click', submitTreatmentValues);
 
 </script>

@@ -255,20 +255,26 @@ def add_symptom_entries():
     """
 
     user = session['user_id']
+    date = request.form.get("date")
     symptoms = request.form.items()
-    print "This is from the symptom request.form: ", symptoms
+    #symptoms = json.loads(symptoms)
+    print "This is the symp values:", symptoms
+    print "This is the date captured:", date
 
     for key, value in symptoms:
-        print key, value
-        symptom_name = key
-        symptom_id = db.session.query(Symptom.symptom_id).filter(
-                                        Symptom.name == symptom_name).first()
-        score = int(value)
-        user_symp_id = db.session.query(UserSymptom.user_symp_id).filter(
-                                                UserSymptom.user_id== user,
-                                                UserSymptom.symptom_id == symptom_id).first()
-        symptom_entry = SymptomEntry(user_symp_id=user_symp_id, value=score)
-        db.session.add(symptom_entry)
+        if key == "date":
+            continue
+        else:
+            print key, value
+            symptom_name = key
+            symptom_id = db.session.query(Symptom.symptom_id).filter(
+                                            Symptom.name == symptom_name).first()
+            score = int(value)
+            user_symp_id = db.session.query(UserSymptom.user_symp_id).filter(
+                                                    UserSymptom.user_id== user,
+                                                    UserSymptom.symptom_id == symptom_id).first()
+            symptom_entry = SymptomEntry(user_symp_id=user_symp_id, value=score, created_at=date)
+            db.session.add(symptom_entry)
 
     db.session.commit()
     return "Your symptoms have been logged."
@@ -291,20 +297,24 @@ def add_treatment_entries():
     """
 
     user = session['user_id']
+    date = request.form.get("date")
     treatments = request.form.items()
     print "This is from the treatment request.form: ", treatments
 
     for key, value in treatments:
-        print key, value
-        treatment_name = key
-        treatment_id = db.session.query(Treatment.treatment_id).filter(
-                                        Treatment.name == treatment_name).first()
-        score = int(value)
-        user_treat_id = db.session.query(UserTreatment.user_treat_id).filter(
-                                        UserTreatment.user_id == user,
-                                        UserTreatment.treatment_id == treatment_id).first()
-        treatment_entry = TreatmentEntry(user_treat_id=user_treat_id, value=score)
-        db.session.add(treatment_entry)
+        if key == 'date':
+            continue
+        else:
+            print key, value
+            treatment_name = key
+            treatment_id = db.session.query(Treatment.treatment_id).filter(
+                                            Treatment.name == treatment_name).first()
+            score = int(value)
+            user_treat_id = db.session.query(UserTreatment.user_treat_id).filter(
+                                            UserTreatment.user_id == user,
+                                            UserTreatment.treatment_id == treatment_id).first()
+            treatment_entry = TreatmentEntry(user_treat_id=user_treat_id, value=score, created_at=date)
+            db.session.add(treatment_entry)
 
     db.session.commit()
     return "Your treatments have been logged."
