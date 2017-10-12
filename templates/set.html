@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Set a new symptom or treatment to track</h2>
+<h4>Select from the autocomplete options or set your own unique value to track.</h4>
+
+<link type='text/css' href="path/to/easy-autocomplete.css">
+<link type='text/css' href="path/to/easy-autocomplete.themes.css">
+<script src="/static/jquery.easy-autocomplete.js"></script>
+
+<div class="row">
+  <div class="col-xs-6">
+    <form method="POST">
+
+    <input type='text' id='autosymptom' name='symptom' placeholder='search' required>
+    <button id='submit-symp' class="btn btn-default">Submit</button>
+
+    </form>
+  </div>
+
+  <div class="col-xs-6">
+    <form method="POST">
+
+    <input type='text' id='autotreatment' name='treatment' placeholder='search' required>
+    <button id='submit-treat' class="btn btn-default">Submit</button>
+
+    </form>
+  </div>
+</div>
+
+<script>
+
+//Gets list of symptoms for symptom autocomplete
+$.get('/auto_symptom', function(symptoms){
+
+
+    console.log(symptoms);
+
+    var options = {
+        data: symptoms,
+        list: {
+            match: {
+                enabled: true
+            }
+        }
+    };
+
+    $("#autosymptom").easyAutocomplete(options);
+
+})
+//Gets list of treatments for treatment autocomplete
+$.get('/auto_treatment', function(treatments){
+
+
+    console.log(treatments);
+
+    var options = {
+        data: treatments,
+        list: {
+            match: {
+                enabled: true
+            }
+        }
+    };
+
+    $("#autotreatment").easyAutocomplete(options);
+
+})
+
+//sets success alert at end of ajax calls.
+function successMessage(result) {
+    alert(result);
+}
+
+//ajax call to set symptom
+function submitSetSymptom(evt) {
+    evt.preventDefault();
+    var formInputs = {symp:$('#autosymptom').val()};
+    $.post("/set_symptom", 
+            formInputs,
+            successMessage)
+}
+//event listener for ajax call
+$('#submit-symp').on("click", submitSetSymptom);
+
+//ajax call to set treatment
+function submitSetTreatment(evt) {
+    evt.preventDefault();
+    console.log("in ajax")
+    var treatFormInputs = {treat:$('#autotreatment').val()};
+    
+    $.post("/set_treatment",
+            treatFormInputs,
+            successMessage)
+}
+//event listener for ajax call
+$('#submit-treat').on('click', submitSetTreatment);
+    
+
+</script>
+
+
+
+{% endblock %}

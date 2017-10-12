@@ -1,15 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
+<div class="row">
+  <div class="col-xs-1"></div>
+  <div class="col-xs-10">
+    <h1>Welcome to BEEtLyme</h1>
+    <h3>Allowing those treating Lyme disease to easily track symptoms and treatments, and get visual feedback about the efficacy of treatments over time.  While this application was made specifically for tracking Bee Venom Therapy as a treatment, other treatments may be tracked as well.</h3>
+  </div>
+  <div class="col-xs-1"></div>
+</div>
 
-<h1>Welcome to BEEtLyme</h1>
-
-<h2>Allowing those treating Lyme disease to easily track symptoms and treatments, and get visual feedback about the efficacy of treatments.</h2>
-
-<h4>New to the page?</h4>
-<p><a href="/register">Register</a></p>
-<h4>Already a User?</h4>
-<p><a href="/login">Login</a></p>
-
-
+<div class="row">
+  <div class="col-xs-1"></div>
+  <div class="col-xs-5">
+    <h4>New to the page?</h4>
+    <a href="/register" class="btn btn-info" role="button">Register</a>
+  </div>
+  <div class="col-xs-5">
+    <h4>Already a User?</h4>
+    <a href="/login" class="btn btn-info" role="button">Login</a>
+  </div>
+  <div class="col-xs-1"></div>
+</div>
 
 {% endblock %}

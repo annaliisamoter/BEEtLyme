@@ -113,11 +113,11 @@ def show_profile():
         return redirect('/login')
 
 
-@app.route('/set_symptom', methods=["GET"])
+@app.route('/set', methods=["GET"])
 def show_set_symptoms():
-    """Shows set symptoms page"""
+    """Shows set symptoms and treatments page"""
 
-    return render_template('/set_symptom.html')
+    return render_template('/set.html')
 
 
 @app.route('/auto_symptom', methods=['GET'])
@@ -137,7 +137,7 @@ def set_new_symptom():
         If not already there, also creates new Symptom and adds to symptoms table.
     """
 
-    symptom = request.form.get("symptom")
+    symptom = request.form.get("symp")
     symptom = symptom.capitalize()
     print "Symptom captured from set-symptom form is", symptom
 
@@ -172,14 +172,14 @@ def set_new_symptom():
 
     db.session.commit()
 
-    return redirect('/profile')
+    return "Your symptom option, {}, has been added to your profile.".format(symptom)
 
 
-@app.route('/set_treatment', methods=["GET"])
-def show_set_treatment():
-    """Shows set treatment page"""
+# @app.route('/set_treatment', methods=["GET"])
+# def show_set_treatment():
+#     """Shows set treatment page"""
 
-    return render_template('/set_treatment.html')
+#     return render_template('/set_treatment.html')
 
 
 @app.route('/auto_treatment', methods=['GET'])
@@ -199,7 +199,7 @@ def set_new_treatment():
         If not already there, also creates new Treatment and adds to symptoms table.
     """
 
-    treatment = request.form.get("treatment")
+    treatment = request.form.get("treat")
     treatment = treatment.capitalize()
     print "Treatment captured from set-treatment form is", treatment
     user = session['user_id']
@@ -234,7 +234,7 @@ def set_new_treatment():
 
     db.session.commit()
 
-    return redirect('/profile')
+    return "Your treatment option, {}, has been added to your profile.".format(treatment)
 
 
 @app.route('/track', methods=["GET", "POST"])

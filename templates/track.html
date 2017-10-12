@@ -11,20 +11,20 @@
         <form id='symptoms' method="POST">
             <ul>
             {% for symptom in symptoms %}
-            <li>{{ symptom.symptom.name }} :<input type='text' class= 'values' name='{{ symptom.symptom.name }}'></li>
+            <li>{{ symptom.symptom.name }} :<input type='number' class= 'values' name='{{ symptom.symptom.name }}' required min='0' max='10'></li>
             {% endfor %}
             </ul>
             <button id='symp-submit' class="btn btn-default">Submit</button>
         </form>
   </div>
   <div class="col-xs-6">
-    <h4>Track your Treatments.</h4>  
+    <h4>Track your Treatments.</h4>   
         <p>For Bee Venom, enter the number of stings in a given session.  For supplements and medications, enter the dosage in milligrams or other appropriate numerical measurement.<p>
 
         <form id='treatments' method="POST">
             <ul>
             {% for treatment in treatments %}
-            <li>{{ treatment.treatment.name }} :<input type='text' name='{{ treatment.treatment.name }}' required></li>
+            <li>{{ treatment.treatment.name }} :<input type='number' name='{{ treatment.treatment.name }}' required></li>
             {% endfor %}
             </ul>
             <button id='treat-submit' class="btn btn-default">Submit</button>
