@@ -1,7 +1,7 @@
 from jinja2 import StrictUndefined
 from flask import Flask, render_template, request, flash, redirect, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
-from model import connect_to_db, db, User, Symptom, Treatment, UserSymptom
+from model import connect_to_db, db, User, Symptom, Treatment, UserSymptom, Comments
 from model import UserTreatment, SymptomEntry, TreatmentEntry, FullMoon, NewMoon
 import helper
 import json
@@ -172,7 +172,7 @@ def set_new_symptom():
 
     db.session.commit()
 
-    return "Your symptom option, {}, has been added to your profile.".format(symptom)
+    return "Your symptom option, {}, has been added to your profile.".format(symptom.name)
 
 
 # @app.route('/set_treatment', methods=["GET"])
@@ -234,7 +234,7 @@ def set_new_treatment():
 
     db.session.commit()
 
-    return "Your treatment option, {}, has been added to your profile.".format(treatment)
+    return "Your treatment option, {}, has been added to your profile.".format(treatment.name)
 
 
 @app.route('/track', methods=["GET", "POST"])
@@ -318,6 +318,28 @@ def add_treatment_entries():
 
     db.session.commit()
     return "Your treatments have been logged."
+
+
+@app.route('/log_comment', methods=["POST"])
+def lof_comment():
+    """Logs user comment to database in comments table."""
+    user_id = session['user_id']
+    date = request.form.get("date")
+    print "This is the date for the comment:", date
+    comment = request.form.items()
+    print "This is the form input for the comment route:", comment
+
+    for key, value in comment:
+        if key == 'date':
+            continue
+        else:
+            print key, value
+            comment = value
+            user_comment = Comments(user_id=user_id, comment=comment, created_at=date)
+            db.session.add(user_comment)
+            print "following user comment has been added to database:", comment
+    db.session.commit()
+    return "Your journal entry has been saved."
 
 
 @app.route('/graph_options', methods=["GET"])

@@ -53,6 +53,17 @@ label{margin-left: 20px;}
     </div>
     <div class="col-xs-2"></div>
 </div>
+<div class="row">
+    <div class="col-xs-2"></div>
+    <div class="col-xs-8">
+      <label for="comment">Journal Entry (optional):</label>
+      <textarea class="form-control" name='comment' rows="5" id="comment"></textarea>
+      <button id='comment-submit' class="btn btn-default">Submit</button>
+    </div>
+    <div class="col-xs-2"></div>
+</div>
+
+
 <script>
 //function for datepicker
 $(function () {
@@ -80,7 +91,7 @@ $('#symp-submit').on("click", submitSymptomValues);
 //ajax call for sending treatment values to app route
 function submitTreatmentValues(evt) {
     evt.preventDefault();
-    var date = $('input.form-control').val()
+    var date = $('input.form-control').val();
     var treatFormInputs = $('#treatments').serialize() + "&date=" + date
     
     $.post("/track_treatments",
@@ -90,6 +101,17 @@ function submitTreatmentValues(evt) {
 //event listener for treatment on 'submit'
 $('#treat-submit').on('click', submitTreatmentValues);
 
+//ajax call for sending comment text to app route
+function submitComment(evt) {
+    evt.preventDefault();
+    var date = $('input.form-control').val();
+    var commentInput = $('#comment').serialize() + "&date=" + date
+    $.post("/log_comment",
+            commentInput,
+            successMessage)
+}
+//event listener for sending comment on 'submit'
+$('#comment-submit').on('click', submitComment);
 </script>
 
 
