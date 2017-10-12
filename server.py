@@ -237,14 +237,15 @@ def set_new_treatment():
     return redirect('/profile')
 
 
-@app.route('/track_symptoms', methods=["GET"])
+@app.route('/track', methods=["GET", "POST"])
 def show_track_symptoms():
-    """Shows track symptoms page"""
+    """Shows track page"""
 
     user = session['user_id']
     symptoms = UserSymptom.query.filter(UserSymptom.user_id == user).all()
+    treatments = UserTreatment.query.filter(UserTreatment.user_id == user).all()
 
-    return render_template('/track_symptoms.html', symptoms=symptoms)
+    return render_template('/track.html', symptoms=symptoms, treatments=treatments)
 
 
 @app.route('/track_symptoms', methods=["POST"])
@@ -255,7 +256,7 @@ def add_symptom_entries():
 
     user = session['user_id']
     symptoms = request.form.items()
-    print "This is from the request.form: ", symptoms
+    print "This is from the symptom request.form: ", symptoms
 
     for key, value in symptoms:
         print key, value
@@ -270,17 +271,17 @@ def add_symptom_entries():
         db.session.add(symptom_entry)
 
     db.session.commit()
-    return redirect('/profile')
+    return "Your symptoms have been logged."
 
 
-@app.route('/track_treatments', methods=["GET"])
-def show_track_treatments():
-    """Shows track treatments page"""
+# @app.route('/track_treatments', methods=["GET"])
+# def show_track_treatments():
+#     """Shows track treatments page"""
 
-    user = session['user_id']
-    treatments = UserTreatment.query.filter(UserTreatment.user_id == user).all()
+#     user = session['user_id']
+#     treatments = UserTreatment.query.filter(UserTreatment.user_id == user).all()
 
-    return render_template('/track_treatments.html', treatments=treatments)
+#     return render_template('/track_treatments.html', treatments=treatments)
 
 
 @app.route('/track_treatments', methods=["POST"])
@@ -291,7 +292,7 @@ def add_treatment_entries():
 
     user = session['user_id']
     treatments = request.form.items()
-    print "This is from the request.form: ", treatments
+    print "This is from the treatment request.form: ", treatments
 
     for key, value in treatments:
         print key, value
@@ -306,7 +307,7 @@ def add_treatment_entries():
         db.session.add(treatment_entry)
 
     db.session.commit()
-    return redirect('/profile')
+    return "Your treatments have been logged."
 
 
 @app.route('/graph_options', methods=["GET"])

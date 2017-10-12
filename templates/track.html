@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- <script type="text/javascript" href="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/locale/af.js"></script>
+<script type="text/javascript" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.css"></script> -->
+
+<div class="row">
+  <div class="col-xs-6">
+    <h4>Track your Symptoms.</h4>  
+        <p>For each symptom, enter a value between 0 and 10 to reflect today's intensity of that symptom.  A zero would indicate the symptom is completely absent this day, and a 10 is the most intense manifestation of the symptom you can imagine.<p>
+
+        <form id='symptoms' method="POST">
+            <ul>
+            {% for symptom in symptoms %}
+            <li>{{ symptom.symptom.name }} :<input type='text' class= 'values' name='{{ symptom.symptom.name }}'></li>
+            {% endfor %}
+            </ul>
+            <button id='symp-submit' class="btn btn-default">Submit</button>
+        </form>
+  </div>
+  <div class="col-xs-6">
+    <h4>Track your Treatments.</h4>  
+        <p>For Bee Venom, enter the number of stings in a given session.  For supplements and medications, enter the dosage in milligrams or other appropriate numerical measurement.<p>
+
+        <form id='treatments' method="POST">
+            <ul>
+            {% for treatment in treatments %}
+            <li>{{ treatment.treatment.name }} :<input type='text' name='{{ treatment.treatment.name }}' required></li>
+            {% endfor %}
+            </ul>
+            <button id='treat-submit' class="btn btn-default">Submit</button>
+        </form>
+</div>
+<script>
+function successMessage(result) {
+    alert(result);
+}
+
+function submitSymptomValues(evt) {
+    evt.preventDefault();
+    var formInputs = $('#symptoms').serialize();
+    $.post("/track_symptoms", 
+            formInputs,
+            successMessage)
+}
+$('#symp-submit').on("click", submitSymptomValues);
+
+function submitTreatmentValues(evt) {
+    evt.preventDefault();
+    console.log("in ajax")
+    var treatFormInputs = $('#treatments').serialize()
+    
+    $.post("/track_treatments",
+            treatFormInputs,
+            successMessage)
+}
+$('#treat-submit').on('click', submitTreatmentValues);
+
+</script>
+
+
+{% endblock %}

@@ -2,21 +2,64 @@
 <html>
 <head>
   <title>BEEtLyme</title>
-  <script src="https://code.jquery.com/jquery.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<style>
+    .navbar-default {
+    background-color: #b0d426;
+    border-color: #b0d426;
+}
+    #brandname {
+        color: black;
+    }
+    .navbar-default .navbar-nav>li>a {
+    color: white;
+    }
+    body {
+      background-color: #e8ffc0
+      }
+  </style>
+
+}
+    </style>
 </head>
 
 <body>
+   <nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" id="brandname" href="#">BEEtLyme</a>
+    </div>
 
-  <hr>
-    <p>BEEtLyme
-      <a href="/profile">Profile</a>
-      <a href="/set_symptom">Set Symptom</a>
-      <a href="/set_treatment">Set Treatment</a>
-      <a href="/track_symptoms">Track Symptoms</a>
-      <a href="/track_treatments">Track Treatments</a>
-      <a href="/graph_options">Graph</a>
-    </p>
-  <hr>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="nav_text"><a href="/">About<span class="sr-only">(current)</span></a></li>
+        <li class="nav_text"><a href="/login">Login</a></li>
+        <li class="nav_text"><a href="/profile">Profile</a></li>
+        
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li class="nav_text"><a href="/set_treatment">Set Treatment</a></li>
+        <li class="nav_text"><a href="/set_symptom">Set Symptom</a></li>
+        <li class="nav_text"><a href="/track">Track</a></li>
+        <li class="nav_text"><a href="/graph_options">Graph</a></li>
+
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
 
     {% for flash in get_flashed_messages() %}
       {{ flash }}
@@ -27,5 +70,11 @@
     {% endblock %}
      
   
+  <style>
+    body {
+      background-color: #e8ffc0
+      }
+  </style>
+
 </body>
 </html>
