@@ -7,8 +7,8 @@
     <br>
     <h3>Here are the symptoms you are currently tracking:</h3>
         <ul>{% for symptom in symptoms %}
-        <li>{{ symptom.symptom.name }}</li>
-        {% endfor %}
+          <li>{{ symptom.symptom.name }}</li>
+          {% endfor %}
         </ul>
         <br>
     <h3>And the treatments you are currently tracking:</h3>
@@ -19,5 +19,24 @@
   </div>
   <div class="col-xs-2"></div>
 </div>
+<div class="row">
+  <div class="col-xs-2"></div>
+  <div class="col-xs-8">
+    <h3>Journal Entries:</h3>
+    <div class="panel panel-default">
+    <div class="panel-body">
+      <ul>{% if entries %}
+        {% for entry in entries %}
+        <li>{{ entry.created_at.strftime('%Y-%m-%d') }}:<br> {{ entry.comment }}
+          <br></li>
+          {% endfor %}
+          {% endif %}
+      </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-2"></div>
+</div>
+
 
 {% endblock %}

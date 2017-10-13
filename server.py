@@ -105,8 +105,10 @@ def show_profile():
         q = User.query.filter(User.user_id == u).first()
         symptoms = q.user_symptom
         treatments = q.user_treatment
+        entries = Comments.query.filter(Comments.user_id == u).order_by(Comments.created_at.desc()).all()
+        print "These are the journal entries on file:", entries
 
-        return render_template('/profile.html', user=q, symptoms=symptoms, treatments=treatments)
+        return render_template('/profile.html', user=q, symptoms=symptoms, treatments=treatments, entries=entries)
 
     else:
         flash("You must be logged in to access this page")
