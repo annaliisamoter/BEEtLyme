@@ -13,8 +13,8 @@ label{margin-left: 20px;}
 
 
 <div class="row">
-    <div class="col-xs-1"></div>
-    <div class="col-xs-10">
+    <div class="col-xs-2"></div>
+    <div class="col-xs-9">
         <label>Select Date: </label>
         <div id="datepicker" class="input-group date" data-date-format="mm-dd-yyyy">
         <input class="form-control" type="text" readonly />
@@ -45,7 +45,7 @@ label{margin-left: 20px;}
         <form id='treatments' method="POST">
             <ul>
             {% for treatment in treatments %}
-            <li>{{ treatment.treatment.name }} :<input type='number' name='{{ treatment.treatment.name }}' required></li>
+            <li>{{ treatment.treatment.name }} :<input type='number' class='values' name='{{ treatment.treatment.name }}' required></li>
             {% endfor %}
             </ul>
             <button id='treat-submit' class="btn btn-default">Submit</button>
