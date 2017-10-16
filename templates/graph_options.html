@@ -15,15 +15,15 @@
   <div class="col-xs-9">
     <form action='/graph_options' method="POST">
         <h4>Symptoms</h4>
-        <ul>
+        <ul id='symp-checks' data-checkbox-count=0>
           {% for symptom in symptom_options %}
-          <li>{{ symptom.symptom.name }} <input type=checkbox name='symptom' value="{{ symptom.symptom.name }}"></li>
+          <li>{{ symptom.symptom.name }} <input type=checkbox class='symptom-checkbox' name='symptom' value="{{ symptom.symptom.name }}"></li>
           {% endfor %}
         </ul>
         <h4>Treatments</h4>
-        <ul>
+        <ul id= 'treat-checks' data-checkbox-count>
           {% for treatment in treatment_options %}
-          <li>{{ treatment.treatment.name }} <input type=checkbox name='treatment' value="{{ treatment.treatment.name }}"></li>
+          <li>{{ treatment.treatment.name }} <input type=checkbox class='treatment-checkbox' name='treatment' value="{{ treatment.treatment.name }}"></li>
           {% endfor %}
         </ul>
         <input type='submit' class="btn btn-default" value='submit'>
@@ -31,5 +31,22 @@
   <div class="col-xs-1"></div>
 </div>
 
-
+<script>
+// var countSymptom = 0
+// $('#symp-checks').data('checkbox-count').click(function () {
+    
+//     console.log($cs)
+//     if ($cs.length > 3) {
+        
+//         alert('Select maximum 3 Symptoms!');
+//     }
+// });
+$('.treatment-checkbox').change(function () {
+    var $cs = $(this).closest('.treatment').find(':checkbox:checked');
+    if ($cs.length > 1) {
+        this.checked = false;
+        alert('Select maximum 1 Treatment!');
+    }
+});
+</script>
 {% endblock %}

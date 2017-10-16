@@ -177,10 +177,10 @@ class NewMoon(db.Model):
     new_moon_date = db.Column(db.DateTime, primary_key=True)
 
 
-def connect_to_db(app):
+def connect_to_db(app, db_uri='postgresql:///beetlyme'):
     """Connect the database to our Flask app."""
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///beetlyme'
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)

@@ -16,7 +16,7 @@ app.jinja_env.undefined = StrictUndefined
 @app.route('/')
 def index():
     """Homepage."""
-    session['user_id'] = 1
+    #session['user_id'] = 1
     return render_template("homepage.html")
 
 
@@ -140,7 +140,7 @@ def set_new_symptom():
     """
 
     symptom = request.form.get("symp")
-    symptom = symptom.capitalize()
+    symptom = symptom.title()
     print "Symptom captured from set-symptom form is", symptom
 
     user = session['user_id']
@@ -148,11 +148,10 @@ def set_new_symptom():
     user_symptoms = db.session.query(UserSymptom).filter(UserSymptom.user_id == user).all()
     user_symptom_names = [symptoms.symptom.name for symptoms in user_symptoms]
 
-    # if symptom in user_symptom_names:
-    #     flash("You are already tracking that symptom.")
-    #     return redirect('/profile')
+    if symptom in user_symptom_names:
+        print symptom, "not added to db. Already tracking."
+        return "You are already tracking that symptom."
 
-    # elif symptom not in user_symptom_names:
     for symp in symptoms_master_list:
 
         if symptom in symp:
@@ -177,12 +176,6 @@ def set_new_symptom():
     return "Your symptom option, {}, has been added to your profile.".format(symptom.name)
 
 
-# @app.route('/set_treatment', methods=["GET"])
-# def show_set_treatment():
-#     """Shows set treatment page"""
-
-#     return render_template('/set_treatment.html')
-
 
 @app.route('/auto_treatment', methods=['GET'])
 def set_auto_complete_treat():
@@ -202,18 +195,18 @@ def set_new_treatment():
     """
 
     treatment = request.form.get("treat")
-    treatment = treatment.capitalize()
+    treatment = treatment.title()
     print "Treatment captured from set-treatment form is", treatment
     user = session['user_id']
     treatments_master_list = db.session.query(Treatment.name).all()
     user_treatments = db.session.query(UserTreatment).filter(UserTreatment.user_id == user).all()
     user_treatment_names = [treatments.treatment.name for treatments in user_treatments]
+    print "This is the list of treatment names already being tracked:", user_treatment_names
 
-    # if treatment in user_treatment_names:
-    #     flash("You are already tracking that treatment.")
-    #     return redirect('/profile')
+    if treatment in user_treatment_names:
+        print treatment, "not added to db. Already tracking."
+        return "You are already tracking that treatment."
 
-    # elif treatment not in user_treatment_names:
     for treat in treatments_master_list:
 
         if treatment in treat:
@@ -275,21 +268,18 @@ def add_symptom_entries():
             user_symp_id = db.session.query(UserSymptom.user_symp_id).filter(
                                                     UserSymptom.user_id== user,
                                                     UserSymptom.symptom_id == symptom_id).first()
-            symptom_entry = SymptomEntry(user_symp_id=user_symp_id, value=score, created_at=date)
-            db.session.add(symptom_entry)
+            #checks if there is already an entry for that date, if so updates value:
+            possible_symptom_entry = SymptomEntry.query.filter(SymptomEntry.user_symp_id == user_symp_id, SymptomEntry.created_at == date).first()
+            if possible_symptom_entry:
+                possible_symptom_entry.value = value 
+            else:
+                # Insert new SE into database
+                symptom_entry = SymptomEntry(user_symp_id=user_symp_id, value=score, created_at=date)
+                db.session.add(symptom_entry)
 
     db.session.commit()
     return "Your symptoms have been logged."
 
-
-# @app.route('/track_treatments', methods=["GET"])
-# def show_track_treatments():
-#     """Shows track treatments page"""
-
-#     user = session['user_id']
-#     treatments = UserTreatment.query.filter(UserTreatment.user_id == user).all()
-
-#     return render_template('/track_treatments.html', treatments=treatments)
 
 
 @app.route('/track_treatments', methods=["POST"])
@@ -315,8 +305,13 @@ def add_treatment_entries():
             user_treat_id = db.session.query(UserTreatment.user_treat_id).filter(
                                             UserTreatment.user_id == user,
                                             UserTreatment.treatment_id == treatment_id).first()
-            treatment_entry = TreatmentEntry(user_treat_id=user_treat_id, value=score, created_at=date)
-            db.session.add(treatment_entry)
+            #checks if there is already a treatment entry for that date, if so updates value.
+            possible_treatment_entry = TreatmentEntry.query.filter(TreatmentEntry.user_treat_id == user_treat_id, TreatmentEntry.created_at == date).first()
+            if possible_treatment_entry:
+                possible_treatment_entry.value = value
+            else:
+                treatment_entry = TreatmentEntry(user_treat_id=user_treat_id, value=score, created_at=date)
+                db.session.add(treatment_entry)
 
     db.session.commit()
     return "Your treatments have been logged."
@@ -369,7 +364,7 @@ def get_graph_options():
                                         treatment_option=treatment_option)
 
 
-@app.route('/graph_data', methods=['GET'])
+@app.route('/graph_data.json', methods=['GET'])
 def assemble_graph_data():
     """queries db and properly formats a json to seed graph data."""
 
@@ -384,16 +379,17 @@ def assemble_graph_data():
     # create trace_data for symptoms and add to total_data
     if len(symptom_options) > 1:
         for option in symptom_options:
-            trace_data = helper.plotly_helper_1(option, user_id)
+            trace_data = helper.plotly_helper_symp(option, user_id)
             total_data['data'].append(trace_data)
     else:
-        total_data['data'].append(helper.plotly_helper_1(symptom_options[0], user_id))
+        total_data['data'].append(helper.plotly_helper_symp(symptom_options[0], user_id))
     # create trace_data for treatment and add to total_data
     total_data['data'].append(helper.plotly_helper_treat(treatment_option, user_id))
 
     #add full moon and new moon traces to the total_data set:
     date_range = helper.get_date_range(total_data)
     print date_range
+    total_data['date_range'] = date_range
     total_data['data'].append(helper.full_moon_phase_overlay(date_range))
     total_data['data'].append(helper.new_moon_phase_overlay(date_range))
 
@@ -402,9 +398,9 @@ def assemble_graph_data():
 
 
 if __name__ == "__main__":
-    app.debug = True
-    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+    #app.debug = True
+    #app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
     connect_to_db(app)
-    DebugToolbarExtension(app)
+    # DebugToolbarExtension(app)
 
     app.run(host="0.0.0.0")

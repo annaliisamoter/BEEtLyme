@@ -12,22 +12,27 @@
 <script>
 
 var jsonData = $.ajax({
-          url: "/graph_data",
+          url: "/graph_data.json",
           data: {symptom_options: $('#symptom').val(), 
                 treatment_option: $('#treatment').val()},
           dataType: "json",
           async: false
           }).responseText;
   
+var parseResponse = JSON.parse(jsonData);
+var dateRange = parseResponse.date_range;
 
-var data = JSON.parse(jsonData).data
-console.log(data)
+var data = parseResponse.data;
 
+console.log(data);
+
+
+//make ajax call to app route for date range.  Json.  var = $.blahdiblah.daterange
 var layout = {
   title: 'Symptoms over Time', 
   xaxis: {
     autorange: true, 
-    range: ['2017-02-17', '2017-10-9'], 
+    range: dateRange, 
     rangeselector: {buttons: [
         {
           count: 1, 
@@ -49,7 +54,7 @@ var layout = {
         }, 
         {step: 'all'}
       ]}, 
-    rangeslider: {range: ['2017-02-17', '2017-10-9']}, 
+    rangeslider: {range: dateRange}, 
     type: 'date'
   }, 
   yaxis: {
@@ -63,9 +68,12 @@ var layout = {
     titlefont: {color: 'rgb(148, 103, 189)'},
     tickfont: {color: 'rgb(148, 103, 189)'},
     side: 'right',
-    overlaying: 'y'
+    overlaying: 'y',
+    autorange: true
   }
 };
+
+console.log(layout)
 
 Plotly.newPlot('myDiv', data, layout);
 
