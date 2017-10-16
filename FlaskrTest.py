@@ -117,6 +117,15 @@ class FlaskTests(unittest.TestCase):
                                     "user_id": "1"})
         self.assertIn("Your treatment option, Vit C", result.data)
 
+    def test_track_symptom(self):
+        """Tests inputting user values to symptom to db."""
+        result = self.client.post("/track_symptoms", data={
+                                    'user': '1',
+                                    'date': '2017-09-11',
+                                    'symptoms': {'Fever': '8'}
+                                    })
+        self.assertIn("Your symptoms have been logged")
+
 
 def example_data():
     """data for test db beetlyme_test"""

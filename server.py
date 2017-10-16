@@ -271,7 +271,7 @@ def add_symptom_entries():
             #checks if there is already an entry for that date, if so updates value:
             possible_symptom_entry = SymptomEntry.query.filter(SymptomEntry.user_symp_id == user_symp_id, SymptomEntry.created_at == date).first()
             if possible_symptom_entry:
-                possible_symptom_entry.value = value 
+                possible_symptom_entry.value = value
             else:
                 # Insert new SE into database
                 symptom_entry = SymptomEntry(user_symp_id=user_symp_id, value=score, created_at=date)
