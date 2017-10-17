@@ -3,6 +3,7 @@ import unittest
 from server import app
 from model import *
 from flask import json, jsonify
+import helper
 
 
 class FlaskTests(unittest.TestCase):
@@ -76,6 +77,8 @@ class FlaskTests(unittest.TestCase):
         result = self.client.get("/graph_options")
         self.assertEqual(result.status_code, 200)
         self.assertIn('Graphing options', result.data)
+        self.assertIn('Fever', result.data)
+        self.assertIn('Bee Venom', result.data)
 
     def test_auto_symptom(self):
         """tests json app route returning json of all symptom names in db."""
@@ -117,14 +120,40 @@ class FlaskTests(unittest.TestCase):
                                     "user_id": "1"})
         self.assertIn("Your treatment option, Vit C", result.data)
 
-    def test_track_symptom(self):
-        """Tests inputting user values to symptom to db."""
-        result = self.client.post("/track_symptoms", data={
-                                    'user': '1',
+    def test_log_comment(self):
+        """Tests adding user comment (journal entry) to db."""
+        result = self.client.post("/log_comment", data={
+                                    'user_id': '1',
                                     'date': '2017-09-11',
-                                    'symptoms': {'Fever': '8'}
+                                    'comment': 'this is a test'})
+        self.assertIn("Your journal entry has been saved.", result.data)
+
+    def test_track_symptom(self):
+        """Tests adding user values to symptom to db."""
+        result = self.client.post("/track_symptoms", data={
+                                    'date': '2017-09-11',
+                                    'Fever': 3
                                     })
-        self.assertIn("Your symptoms have been logged")
+        self.assertIn("Your symptoms have been logged", result.data)
+
+    def test_track_treatment(self):
+        """Tests adding user values to track treatment to db."""
+        result = self.client.post("/track_treatments", data={
+                                    'date': '2017-09-11',
+                                    'Bee Venom': 10
+                                    })
+        self.assertIn("Your treatments have been logged", result.data)
+
+    def test_graph_json(self):
+        """Tests app route that packages user data for graphing in plotly."""
+
+        result = self.client.get('/graph_data.json', query_string={
+                                    'symptom_options':'["Fever"]',
+                                    'treatment_option':'"Bee Venom"'})
+        data = json.loads(result.data)
+        self.assertIn("data", data)
+        self.assertIn("date_range", data)
+
 
 
 def example_data():
@@ -175,29 +204,30 @@ def example_data():
     db.session.commit()
 
 
-class FlaskTestsDatabase(unittest.TestCase):
-    """Flask tests that use the database."""
+    
+# class FlaskTestsDatabase(unittest.TestCase):
+#     """Flask tests that use the database."""
 
-    def setUp(self):
-        """Stuff to do before every test."""
-        self.client = app.test_client()
-        app.config['TESTING'] = True
-        app.config['SECRET_KEY'] = 'key'
-        # Connect to test database
-        connect_to_db(app, "postgresql:///beetlyme_test")
+#     def setUp(self):
+#         """Stuff to do before every test."""
+#         self.client = app.test_client()
+#         app.config['TESTING'] = True
+#         app.config['SECRET_KEY'] = 'key'
+#         # Connect to test database
+#         connect_to_db(app, "postgresql:///beetlyme_test")
 
-        # Create tables and add sample data
-        db.create_all()
-        example_data()
+#         # Create tables and add sample data
+#         db.create_all()
+#         example_data()
 
-    def tearDown(self):
-        """Do at end of every test."""
+#     def tearDown(self):
+#         """Do at end of every test."""
 
-        db.session.close()
-        db.drop_all()
+#         db.session.close()
+#         db.drop_all()
 
-    # def test_some_db_thing(self):
-    #     """Some database test..."
+#     # def test_some_db_thing(self):
+#     #     """Some database test..."
 
 
 if __name__ == '__main__':

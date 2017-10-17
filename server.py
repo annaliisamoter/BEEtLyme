@@ -332,9 +332,14 @@ def lof_comment():
         else:
             print key, value
             comment = value
-            user_comment = Comments(user_id=user_id, comment=comment, created_at=date)
-            db.session.add(user_comment)
-            print "following user comment has been added to database:", comment
+            possible_journal_entry = Comments.query.filter(Comments.user_id == user_id, Comments.created_at == date).first()
+            if possible_journal_entry:
+                possible_journal_entry.comment = comment
+                print "User comment has been updated for existing date:", date
+            else:
+                user_comment = Comments(user_id=user_id, comment=comment, created_at=date)
+                db.session.add(user_comment)
+                print "following user comment has been added to database:", comment
     db.session.commit()
     return "Your journal entry has been saved."
 
@@ -367,11 +372,11 @@ def get_graph_options():
 @app.route('/graph_data.json', methods=['GET'])
 def assemble_graph_data():
     """queries db and properly formats a json to seed graph data."""
-
+    print request.args
     user_id = session['user_id']
     symptom_options = request.args.get('symptom_options')
     treatment_option = request.args.get('treatment_option')
-    print "graph_options from inside graph_data route", symptom_options, treatment_option
+    print "graph_options from inside graph_data route", symptom_options[0], treatment_option
     symptom_options = json.loads(symptom_options)
     treatment_option = json.loads(treatment_option)
 
@@ -393,7 +398,7 @@ def assemble_graph_data():
     total_data['data'].append(helper.full_moon_phase_overlay(date_range))
     total_data['data'].append(helper.new_moon_phase_overlay(date_range))
 
-    print total_data
+    print "This is the total_data", total_data
     return jsonify(total_data)
 
 
