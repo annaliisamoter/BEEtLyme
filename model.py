@@ -1,8 +1,7 @@
 """Models and db for BEEtLyme Project"""
 
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
-#from server import app
+#from datetime import datetime
 db = SQLAlchemy()
 
 
@@ -21,7 +20,7 @@ class User(db.Model):
 
     def __repr__(self):
         """Provides useful printed representation"""
-        return "<User user_id=%s user name=%s %s" % (self.user_id, self.fname, self.lname)
+        return "<User user_id=%s user name=%s %s" % (self.user_id, self.fname, self.lname)  #pragma: no cover
 
 
 class Symptom(db.Model):
@@ -37,7 +36,7 @@ class Symptom(db.Model):
 
     def __repr__(self):
         """Provides useful printed representation"""
-        return "<Symptom symptom_id=%s symptom name=%s" % (self.symptom_id, self.name)
+        return "<Symptom symptom_id=%s symptom name=%s" % (self.symptom_id, self.name)  #pragma: no cover
 
 
 class Treatment(db.Model):
@@ -53,7 +52,7 @@ class Treatment(db.Model):
 
     def __repr__(self):
         """Provides useful printed representation"""
-        return "<Symptom symptom_id=%s symptom name=%s" % (self.treatment_id, self.name)
+        return "<Symptom symptom_id=%s symptom name=%s" % (self.treatment_id, self.name)  #pragma: no cover
 
 
 class UserSymptom(db.Model):
@@ -74,7 +73,7 @@ class UserSymptom(db.Model):
     def __repr__(self):
         """Provides useful printed representation"""
         return "<UserSymptom %s pairs user %s with symptom %s" % (
-                        self.user_symp_id, self.user.fname, self.symptom.name)
+                        self.user_symp_id, self.user.fname, self.symptom.name)  #pragma: no cover
 
 
 class UserTreatment(db.Model):
@@ -96,7 +95,7 @@ class UserTreatment(db.Model):
     def __repr__(self):
         """Provides useful printed representation"""
         return "<UserTreatment %s pairs user %s with treatment %s" % (
-                        self.user_treat_id, self.user.fname, self.treatment.name)
+                        self.user_treat_id, self.user.fname, self.treatment.name)  #pragma: no cover
 
 
 class SymptomEntry(db.Model):
@@ -117,9 +116,8 @@ class SymptomEntry(db.Model):
     def __repr__(self):
         """Provides useful printed representation"""
         return "<SymptomEntry %s declared %s as value %s" % (
-                        self.entry_id, self.user_symp.symptom.name, self.value)
+                        self.entry_id, self.user_symp.symptom.name, self.value)  #pragma: no cover
 
-        #can we jump through several relationships like this in the repr? ^^
 
 class TreatmentEntry(db.Model):
     """defines model for TreatmentEntry storing user data for tracking treatment"""
@@ -127,8 +125,6 @@ class TreatmentEntry(db.Model):
     __tablename__ = "treatment_entries"
 
     entry_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    # user_treat_id = db.Column(db.Integer, db.ForeignKey('user-treatments.user_treat_id'),
-    #                                                 nullable=False, index=True)
     user_treat_id = db.Column(db.Integer, db.ForeignKey('user_treatments.user_treat_id'),
                                                     nullable=False, index=True)
     value = db.Column(db.Integer, nullable=False)
@@ -137,14 +133,13 @@ class TreatmentEntry(db.Model):
     deleted_at = db.Column(db.DateTime(timezone=True), nullable=True)
 
     user_treat = db.relationship("UserTreatment", backref=db.backref("treatment_entry"))
-    #, primaryjoin="TreatmentEntry.user_treat_id == UserTreatment.user_treat_id"
 
     def __repr__(self):
         """Provides useful printed representation"""
         return "<TreatmentEntry %s declared %s as value %s" % (self.entry_id,
                                                                self.user_treat_id.treatment.name,
                                                                self.value
-                                                               )
+                                                               )  # pragma: no cover
 
 
 class Comments(db.Model):
@@ -154,11 +149,18 @@ class Comments(db.Model):
 
     comment_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'),
-                                                    nullable=False, index=True)
+                                                    nullable=False)
     comment = db.Column(db.String(500), nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), default=db.func.now(), nullable=True)
     updated_at = db.Column(db.DateTime(timezone=True), nullable=True)
     deleted_at = db.Column(db.DateTime(timezone=True), nullable=True)
+
+    user = db.relationship("User", backref=db.backref("comments"))
+
+    def __repr__(self):
+        """Provides useful printed representation"""
+        return "<Comments %s made by %s on %s>" % (self.comment_id, self.user_id,
+                                            self.created_at)  # pragma: no cover
 
 
 class FullMoon(db.Model):
@@ -168,6 +170,10 @@ class FullMoon(db.Model):
 
     full_moon_date = db.Column(db.DateTime, primary_key=True)
 
+    def __repr__(self):
+        """Provides useful printed representation"""
+        return "<Full Moon on %s>" % (self.full_moon_date)  #pragma: no cover
+
 
 class NewMoon(db.Model):
     """defines NewMoon model"""
@@ -175,6 +181,10 @@ class NewMoon(db.Model):
     __tablename__ = "new_moons"
 
     new_moon_date = db.Column(db.DateTime, primary_key=True)
+
+    def __repr__(self):
+        """Provides useful printed representation"""
+        return "<New Moon on %s>" % (self.new_moon_date)  #pragma: no cover
 
 
 def connect_to_db(app, db_uri='postgresql:///beetlyme'):
@@ -186,7 +196,7 @@ def connect_to_db(app, db_uri='postgresql:///beetlyme'):
     db.init_app(app)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  #pragma: no cover
 
     #from flask import Flask
 

@@ -56,6 +56,15 @@ class FlaskTests(unittest.TestCase):
         self.assertIn("Annabelle", result.data)
         self.assertIn("already logged in", result.data)
 
+    def test_login_wrong_password(self):
+        """Tests route when user email and password don't match."""
+        result = self.client.post("/login", data={
+                                    "email": "bernadette@gmail.com",
+                                    "password": "password123",
+                                    }, follow_redirects=True)
+        self.assertIn("do not match", result.data)
+
+
     def test_register(self):
         """tests render profile page"""
         result = self.client.get("/register")
@@ -118,13 +127,20 @@ class FlaskTests(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertIn('Track your Symptoms', result.data)
 
-    def test_graph_options_render(self):
+    def test_graph_options_render_get(self):
         """Tests rending of graph_options page."""
         result = self.client.get("/graph_options")
         self.assertEqual(result.status_code, 200)
         self.assertIn('Graphing options', result.data)
         self.assertIn('Fever', result.data)
         self.assertIn('Bee Venom', result.data)
+
+    def test_graph_options_render_post(self):
+        """Tests that the chart_2html is rendering."""
+        result = self.client.post("/graph_options", data={'symptom_options': ['Fever', 'Sweats, Chills'], 
+                                                            'treatment_option': 'Vitamin C'})
+        self.assertEqual(result.status_code, 200)
+        self.assertIn("Symptoms over Time", result.data)
 
     def test_auto_symptom(self):
         """tests json app route returning json of all symptom names in db."""
@@ -170,27 +186,39 @@ class FlaskTests(unittest.TestCase):
                                     "treat": "Vit D"})
         self.assertIn("Your treatment option, Vit D", result.data)
 
-    def test_set_treatment_nwe_to_db(self):
+    def test_set_treatment_new_to_db(self):
         """Tests that new treatments are added to master treatments table."""
         result = self.client.post("/set_treatment", data={
-                                    "treat": "Vit D"})
-        test_query = db.session.query(Treatment).filter(Treatment.name == "Vit D").first()
-        self.assertIn("Vit D", test_query.name)
+                                    "treat": "Quercetin"})
+        test_query = db.session.query(Treatment).filter(Treatment.name == "Quercetin").first()
+        self.assertIn("Quercetin", test_query.name)
 
     def test_log_comment(self):
         """Tests adding user comment (journal entry) to db."""
         result = self.client.post("/log_comment", data={
                                     'date': '2017-09-11',
                                     'comment': 'this is a test'})
+        test_query = db.session.query(Comments).filter(Comments.user_id == 1, Comments.created_at == '2017-09-11').first()
+        self.assertIn("this is a test", test_query.comment)
         self.assertIn("Your journal entry has been saved.", result.data)
 
     def test_track_symptom(self):
-        """Tests adding user values to symptom to db."""
+        """Tests adding new user values to symptom to db."""
         result = self.client.post("/track_symptoms", data={
                                     'date': '2017-09-11',
                                     'Fever': 3
                                     })
         self.assertIn("Your symptoms have been logged", result.data)
+
+    def test_track_symptom_update(self):
+        """Tests that if user adds input for date already in db, it updates value."""
+        result = self.client.post("/track_symptoms", data={
+                                    'date': '2017-09-09',
+                                    'Fever': 1
+                                    })
+        test_query = db.session.query(SymptomEntry).filter(SymptomEntry.user_symp_id == 1,
+                                        SymptomEntry.created_at == '2017-09-09').first()
+        self.assertEqual(1, test_query.value)
 
     def test_track_treatment(self):
         """Tests adding user values to track treatment to db."""
@@ -200,7 +228,27 @@ class FlaskTests(unittest.TestCase):
                                     })
         self.assertIn("Your treatments have been logged", result.data)
 
-    def test_graph_json(self):
+    def test_track_treatment_update(self):
+        """Tests that if user adds input for date already in db, it updates value."""
+        result = self.client.post("/track_treatments", data={
+                                    'date': '2017-09-09',
+                                    'Bee Venom': 8
+                                    })
+        test_query = db.session.query(TreatmentEntry).filter(TreatmentEntry.user_treat_id == 1,
+                                        TreatmentEntry.created_at == '2017-09-09').first()
+        self.assertEqual(8, test_query.value)
+
+    # def test_log_comment_update(self):
+    #     """Tests that if user makes journal entry for date where one already exists,
+    #     it updates the comment in db instead of creating second entry."""
+    #     result = self.client.post("/log_comment", data={
+    #                                 'date': '2017-09-01',
+    #                                 'comment': 'this is a test'})
+
+    #     test_query = db.session.query(Comments).filter(Comments.user_id == 1, Comments.created_at == '2019-09-01').first()
+    #     self.assertIn('this is a test', test_query.comment)
+
+    def test_graph_json_one_symptom(self):
         """Tests app route that packages user data for graphing in plotly."""
 
         result = self.client.get('/graph_data.json', query_string={
@@ -209,6 +257,17 @@ class FlaskTests(unittest.TestCase):
         data = json.loads(result.data)
         self.assertIn("data", data)
         self.assertIn("date_range", data)
+
+    def test_graph_json_multiple_symptoms(self):
+        """Tests app route packaging graphing data for > 1 symptom."""
+
+        result = self.client.get('/graph_data.json', query_string={
+                                    'symptom_options':'["Fever", "Sweats, Chills"]',
+                                    'treatment_option':'"Bee Venom"'})
+        data = json.loads(result.data)
+        self.assertIn("data", data)
+        self.assertIn("date_range", data)
+
 
 
 def example_data():
@@ -224,14 +283,17 @@ def example_data():
                 email='bernadette@gmail.com',
                 password='password456',
                 created_at='2017-09-01')
-
     db.session.add_all([user_1, user_2])
+
     symptom_1 = Symptom(name="Fever", created_at=created_at)
     symptom_2 = Symptom(name="Sweats, Chills", created_at=created_at)
-    db.session.add_all([symptom_1, symptom_2])
+    symptom_3 = Symptom(name="Muscle Pain", created_at=created_at)
+    db.session.add_all([symptom_1, symptom_2, symptom_3])
+
     treatment_1 = Treatment(name='Bee Venom', created_at=created_at)
     treatment_2 = Treatment(name='Vitamin C', created_at=created_at)
-    db.session.add_all([treatment_1, treatment_2])
+    treatment_3 = Treatment(name='Vit D', created_at=created_at)
+    db.session.add_all([treatment_1, treatment_2, treatment_3])
 
     user_symptom_1 = UserSymptom(user_id=1, symptom_id=1, created_at=created_at)
     user_symptom_2 = UserSymptom(user_id=1, symptom_id=2, created_at=created_at)
@@ -296,6 +358,9 @@ def example_data():
     db.session.add_all([treatment_entry_4, te_12, te_13, te_14])
     db.session.add(treatment_entry_5)
 
+    comment_1 = Comments(user_id=1, comment="testing comment db.", created_at=created_at)
+    db.session.add(comment_1)
+
     full_moon = FullMoon(full_moon_date="2017-09-06")
     db.session.add(full_moon)
     new_moon = NewMoon(new_moon_date="2017-09-20")
@@ -303,31 +368,6 @@ def example_data():
 
     db.session.commit()
 
-
-    
-# class FlaskTestsDatabase(unittest.TestCase):
-#     """Flask tests that use the database."""
-
-#     def setUp(self):
-#         """Stuff to do before every test."""
-#         self.client = app.test_client()
-#         app.config['TESTING'] = True
-#         app.config['SECRET_KEY'] = 'key'
-#         # Connect to test database
-#         connect_to_db(app, "postgresql:///beetlyme_test")
-
-#         # Create tables and add sample data
-#         db.create_all()
-#         example_data()
-
-#     def tearDown(self):
-#         """Do at end of every test."""
-
-#         db.session.close()
-#         db.drop_all()
-
-#     # def test_some_db_thing(self):
-#     #     """Some database test..."
 
 
 if __name__ == '__main__':

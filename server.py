@@ -402,10 +402,10 @@ def assemble_graph_data():
     return jsonify(total_data)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  #pragma: no cover
     #app.debug = True
     #app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-    connect_to_db(app)
+    connect_to_db(app)  #pragma
     # DebugToolbarExtension(app)
 
-    app.run(host="0.0.0.0")
+    app.run(host="0.0.0.0")  
