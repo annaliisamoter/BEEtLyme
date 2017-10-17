@@ -49,7 +49,7 @@ def register_process():
         db.session.commit()
         print "new user has been added to the database"
         flash("Welcome!")
-        return render_template('/login')
+        return render_template('/login.html')
 
 
 @app.route('/login', methods=["GET"])
@@ -169,7 +169,7 @@ def set_new_symptom():
         user_symptom = UserSymptom(symptom_id=symptom_id, user_id=user)
         db.session.add(user_symptom)
         print
-        print "New Symptom: ", symptom.name, ", added to user_symptom db."
+        print "New Symptom: ", symptom.name, ", added to symptom and user_symptom db."
 
     db.session.commit()
 
