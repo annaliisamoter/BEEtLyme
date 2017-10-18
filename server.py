@@ -67,7 +67,7 @@ def login_process():
 
     q = db.session.query(User).filter(User.email == email).first()
 
-    if q.user_id == session['user_id']:
+    if 'user_id' in session and q.user_id == session['user_id']:
         flash("You are already logged in")
         print "User already logged in"
         return redirect('profile')
@@ -99,13 +99,15 @@ def log_out():
 @app.route('/profile')
 def show_profile():
     """Displays profile page of logged in user"""
-
     if session['user_id']:
         u = session['user_id']
-        q = User.query.filter(User.user_id == u).first()
+
+        q = User.query.get(u)
+        q.comments
         symptoms = q.user_symptom
         treatments = q.user_treatment
         entries = Comments.query.filter(Comments.user_id == u).order_by(Comments.created_at.desc()).all()
+
         print "These are the journal entries on file:", entries
 
         return render_template('/profile.html', user=q, symptoms=symptoms, treatments=treatments, entries=entries)
@@ -153,7 +155,7 @@ def set_new_symptom():
         return "You are already tracking that symptom."
 
     for symp in symptoms_master_list:
-
+        # checking if symptom is already in master db of symptoms
         if symptom in symp:
             symptom = Symptom.query.filter_by(name=symptom).first()
             user_symptom = UserSymptom(symptom_id=symptom.symptom_id, user_id=user)
@@ -161,7 +163,7 @@ def set_new_symptom():
             print
             print "Existing Symptom: ", symptom.name, ", added to user_symptom db."
             break
-
+    # if brand new symptom, also adding to symptom table
     else:
         symptom = Symptom(name=symptom)
         db.session.add(symptom)
@@ -208,7 +210,7 @@ def set_new_treatment():
         return "You are already tracking that treatment."
 
     for treat in treatments_master_list:
-
+        #checks if treatment is already in db
         if treatment in treat:
             treatment = Treatment.query.filter_by(name=treatment).first()
             user_treatment = UserTreatment(treatment_id=treatment.treatment_id, user_id=user)
@@ -216,7 +218,7 @@ def set_new_treatment():
             print
             print "Existing Treatment: ", treatment.name, ", added to user_treatment db."
             break
-
+    # if brand new treatment, adds to master treatments table
     else:
         treatment = Treatment(name=treatment)
         db.session.add(treatment)

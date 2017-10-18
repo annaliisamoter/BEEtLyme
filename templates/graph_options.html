@@ -17,13 +17,13 @@
         <h4>Symptoms</h4>
         <ul id='symp-checks' data-checkbox-count=0>
           {% for symptom in symptom_options %}
-          <li>{{ symptom.symptom.name }} <input type=checkbox class='symptom-checkbox' name='symptom' value="{{ symptom.symptom.name }}"></li>
+            {{ symptom.symptom.name }} <input type=checkbox class='symptom-checkbox' name='symptom' value="{{ symptom.symptom.name }}"><br>
           {% endfor %}
         </ul>
         <h4>Treatments</h4>
         <ul id= 'treat-checks' data-checkbox-count>
           {% for treatment in treatment_options %}
-          <li>{{ treatment.treatment.name }} <input type=checkbox class='treatment-checkbox' name='treatment' value="{{ treatment.treatment.name }}"></li>
+           {{ treatment.treatment.name }} <input type=checkbox class='treatment-checkbox' name='treatment' value="{{ treatment.treatment.name }}"><br>
           {% endfor %}
         </ul>
         <input type='submit' class="btn btn-default" value='submit'>
@@ -32,21 +32,19 @@
 </div>
 
 <script>
-// var countSymptom = 0
-// $('#symp-checks').data('checkbox-count').click(function () {
-    
-//     console.log($cs)
-//     if ($cs.length > 3) {
-        
-//         alert('Select maximum 3 Symptoms!');
-//     }
-// });
-$('.treatment-checkbox').change(function () {
-    var $cs = $(this).closest('.treatment').find(':checkbox:checked');
-    if ($cs.length > 1) {
-        this.checked = false;
-        alert('Select maximum 1 Treatment!');
-    }
+var sympLimit = 3;
+$('input.symptom-checkbox').on('change', function(evt) {
+   if($(this).siblings(':checked').length >= sympLimit) {
+       this.checked = false;
+       console.log("limit is 3 symptoms");
+   }
+});
+var treatLimit = 1;
+$('input.treatment-checkbox').on('change', function(evt) {
+   if($(this).siblings(':checked').length >= treatLimit) {
+       this.checked = false;
+       console.log("limit is 1 symptom");
+   }
 });
 </script>
 {% endblock %}

@@ -32,7 +32,7 @@ label{margin-left: 20px;}
         <form id='symptoms' method="POST">
             <ul>
             {% for symptom in symptoms %}
-            <li>{{ symptom.symptom.name }} :<input type='number' class= 'values' name='{{ symptom.symptom.name }}' required min='0' max='10'></li>
+            {{ symptom.symptom.name }} :<input type='number' class= 'values' name='{{ symptom.symptom.name }}' required min='0' max='10'><br>
             {% endfor %}
             </ul>
             <button id='symp-submit' class="btn btn-default">Submit</button>
@@ -78,9 +78,9 @@ $(function () {
         todayHighlight: true
   }).datepicker('update', new Date());
 });
-//success function for sending success message for tracking ajax calls
-function successMessage(result) {
-    alert(result);
+//success function for sending success message for tracking symptom ajax call
+function sympSuccessMessage(result) {
+    $('#symp-submit').toggleClass("btn btn-success").html("Success");
 }
 //ajax call sending symptom values to app route
 function submitSymptomValues(evt) {
@@ -89,11 +89,15 @@ function submitSymptomValues(evt) {
     var formInputs = $('#symptoms').serialize() + "&date=" + date
     $.post("/track_symptoms", 
             formInputs,
-            successMessage)
+            sympSuccessMessage)
 }
 //event listener for symptom on 'submit'
 $('#symp-submit').on("click", submitSymptomValues);
 
+//success function for treatment ajax call
+function treatSuccessMessage(result) {
+    $('#treat-submit').toggleClass("btn btn-success").html("Success");
+}
 //ajax call for sending treatment values to app route
 function submitTreatmentValues(evt) {
     evt.preventDefault();
@@ -102,11 +106,15 @@ function submitTreatmentValues(evt) {
     
     $.post("/track_treatments",
             treatFormInputs,
-            successMessage)
+            treatSuccessMessage)
 }
 //event listener for treatment on 'submit'
 $('#treat-submit').on('click', submitTreatmentValues);
 
+//success function for comment ajax call
+function commentSuccessMessage(result) {
+    $('#comment-submit').toggleClass("btn btn-success").html("Success");
+}
 //ajax call for sending comment text to app route
 function submitComment(evt) {
     evt.preventDefault();
@@ -114,7 +122,7 @@ function submitComment(evt) {
     var commentInput = $('#comment').serialize() + "&date=" + date
     $.post("/log_comment",
             commentInput,
-            successMessage)
+            commentSuccessMessage)
 }
 //event listener for sending comment on 'submit'
 $('#comment-submit').on('click', submitComment);
