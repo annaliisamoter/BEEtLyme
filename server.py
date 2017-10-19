@@ -280,7 +280,7 @@ def add_symptom_entries():
                 db.session.add(symptom_entry)
 
     db.session.commit()
-    return "Your symptoms have been logged."
+    return "Your symptom data have been logged."
 
 
 
@@ -316,7 +316,7 @@ def add_treatment_entries():
                 db.session.add(treatment_entry)
 
     db.session.commit()
-    return "Your treatments have been logged."
+    return "Your treatment data have been logged."
 
 
 @app.route('/log_comment', methods=["POST"])
