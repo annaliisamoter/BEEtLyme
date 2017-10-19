@@ -21,7 +21,7 @@
     <label for="symptom">Choose Symptom to track:</label>
     <input type='text' id='autosymptom' name='symptom' placeholder='search' required>
     <button id='submit-symp' class="btn btn-default">Submit</button>
-
+    <p id='set-symp'></p>
     </form>
   </div>
 
@@ -30,6 +30,7 @@
     <label for="treatment">Choose Treatment to track:</label>
     <input type='text' id='autotreatment' name='treatment' placeholder='search' required>
     <button id='submit-treat' class="btn btn-default">Submit</button>
+    <p id='set-treat'></p>
 
     </form>
   </div>
@@ -75,9 +76,10 @@ $.get('/auto_treatment', function(treatments){
 
 })
 
-//sets success alert at end of ajax calls.
-function successMessage(result) {
-    alert(result);
+//sets success button at end of set symp ajax call.
+function successSympMessage(result) {
+    $('#submit-symp').toggleClass("btn btn-success").html("Success");
+    $('#set-symp').html(result);
 }
 
 //ajax call to set symptom
@@ -86,10 +88,15 @@ function submitSetSymptom(evt) {
     var formInputs = {symp:$('#autosymptom').val()};
     $.post("/set_symptom", 
             formInputs,
-            successMessage)
+            successSympMessage)
 }
 //event listener for ajax call
 $('#submit-symp').on("click", submitSetSymptom);
+
+//sets success button at end of set treat ajax call.
+function successTreatMessage(result) {
+    $('#submit-treat').toggleClass("btn btn-success").html("Success");
+}
 
 //ajax call to set treatment
 function submitSetTreatment(evt) {
@@ -99,7 +106,7 @@ function submitSetTreatment(evt) {
     
     $.post("/set_treatment",
             treatFormInputs,
-            successMessage)
+            successTreatMessage)
 }
 //event listener for ajax call
 $('#submit-treat').on('click', submitSetTreatment);
