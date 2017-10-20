@@ -1,9 +1,11 @@
 astral==1.4
 backports.shutil-get-terminal-size==1.0.0
+bcrypt==3.1.4
 beautifulsoup4==4.6.0
 blinker==1.4
 bs4==0.0.1
 certifi==2017.7.27.1
+cffi==1.11.2
 chardet==3.0.4
 click==6.7
 coverage==4.4.1
@@ -11,6 +13,7 @@ DateTime==4.2
 decorator==4.1.2
 enum34==1.1.6
 Flask==0.12.2
+Flask-Bcrypt==0.7.1
 Flask-DebugToolbar==0.10.1
 Flask-SQLAlchemy==2.2
 functools32==3.2.3.post2
@@ -33,6 +36,7 @@ pprint==0.1
 prompt-toolkit==1.0.15
 psycopg2==2.7.3.1
 ptyprocess==0.5.2
+pycparser==2.18
 Pygments==2.2.0
 pytz==2017.2
 requests==2.18.4

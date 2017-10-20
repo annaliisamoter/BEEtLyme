@@ -5,11 +5,11 @@ from model import connect_to_db, db, User, Symptom, Treatment, UserSymptom, Comm
 from model import UserTreatment, SymptomEntry, TreatmentEntry, FullMoon, NewMoon
 import helper
 import json
+from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
-
+bcrypt = Bcrypt(app)
 app.secret_key = "ABC"
-
 app.jinja_env.undefined = StrictUndefined
 
 
@@ -35,6 +35,8 @@ def register_process():
     lname = request.form.get('lname')
     email = request.form.get('email')
     password = request.form.get('password')
+    pw_hash = bcrypt.generate_password_hash(password)
+    print pw_hash
 
     q = db.session.query(User).filter(User.email == email).all()
 
@@ -44,11 +46,11 @@ def register_process():
         return redirect('/login')
 
     else:
-        new_user = User(fname=fname, lname=lname, email=email, password=password)
+        new_user = User(fname=fname, lname=lname, email=email, password=pw_hash)
         db.session.add(new_user)
         db.session.commit()
         print "new user has been added to the database"
-        flash("Welcome!")
+        flash("Welcome to BEEtLyme!")
         return render_template('/login.html')
 
 
@@ -69,11 +71,11 @@ def login_process():
 
     if 'user_id' in session and q.user_id == session['user_id']:
         flash("You are already logged in")
-        print "User already logged in"
         return redirect('profile')
 
-    elif q and q.password == password:
-        print q, q.password
+
+    elif q and bcrypt.check_password_hash(q.password, password):
+        #formerly written as q.password == password without the bcrypt
         session['user_id'] = q.user_id
         session['logged_in'] = True
         flash("Login successful. Welcome back.")
@@ -84,6 +86,8 @@ def login_process():
         flash("Your email or password do not match our records, please try again")
         print "login failed"
         return redirect('/login')
+
+
 
 
 @app.route('/logout')
@@ -115,6 +119,36 @@ def show_profile():
     else:
         flash("You must be logged in to access this page")
         return redirect('/login')
+
+
+@app.route('/update', methods=['POST'])
+def update_user_info():
+    """Allows user to update user info and reset password."""
+    user = User.query.get(session['user_id'])
+    fname = request.form.get('fname')
+    lname = request.form.get('lname')
+    email = request.form.get('email')
+    current_password = request.form.get('current-password')
+    new_password = request.form.get('new-password')
+
+    if not bcrypt.check_password_hash(user.password, current_password):
+        flash("Current password does not match our records.  Changes not saved.")
+        return redirect('/profile')
+
+    else:
+        pw_hash = bcrypt.generate_password_hash(new_password)
+        user.password = pw_hash
+
+        if fname:
+            user.fname = fname
+        if lname:
+            user.lname = lname
+        if email:
+            user.email = email
+
+        db.session.commit()
+        flash("Your profile changes have been saved.")
+        return redirect('/profile')
 
 
 @app.route('/set', methods=["GET"])

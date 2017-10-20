@@ -3,6 +3,9 @@ from model import User, Treatment, Symptom, connect_to_db, db
 from model import UserTreatment, UserSymptom, SymptomEntry, TreatmentEntry, FullMoon, NewMoon
 from server import app
 from datetime import datetime
+from flask_bcrypt import Bcrypt
+
+bcrypt = Bcrypt(app)
 
 
 def load_users():
@@ -16,10 +19,12 @@ def load_users():
         row = row.rstrip()
         fname, lname, email, password, created_at = row.split("|")
 
+        pw_hash = bcrypt.generate_password_hash(password)
+
         user = User(fname=fname,
                     lname=lname,
                     email=email,
-                    password=password,
+                    password=pw_hash,
                     created_at=created_at)
 
         db.session.add(user)

@@ -2,7 +2,7 @@
 {% block content %}
 <div class="row">
   <div class="col-xs-2"></div>
-  <div class="col-xs-9">
+  <div class="col-xs-6">
     <h2>Welcome back {{ user.fname }} {{ user.lname }}</h2>
     <br>
     <h3>Here are the symptoms you are currently tracking:</h3>
@@ -17,7 +17,22 @@
         {% endfor %}
         </ul>
   </div>
-  <div class="col-xs-2"></div>
+  <div class="col-xs-4">
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <button id='update-button' class="btn btn-default">Update User Info</button><br><br>
+    <form action='/update' id='update-form' type='hidden' method="POST">
+          <input type='text' id='fname' name='fname' placeholder='First Name'><br><br>
+          <input type='text' id='lname' name='lname' placeholder='Last Name'><br><br>
+          <input type='text' id='email' name='email' placeholder='email address'><br><br>
+          <input type='text' id='old-password' name='current-password' placeholder='current password' required><br><br>
+          <input type='text' id='new-password' name='new-password' placeholder='new password'><br><br>
+          <input type='submit' class="btn btn-default" value='Update'><br><br>
+
+      </form> 
 </div>
 <div class="row">
   <div class="col-xs-2"></div>
@@ -39,5 +54,13 @@
   <div class="col-xs-2"></div>
 </div>
 
+<script>
+$('#update-form').hide();
+$('#update-button').on('click', function(){
+    $('#update-form').show();
+    $('#update-button').hide();
+});
+
+</script>
 
 {% endblock %}
