@@ -1,0 +1,19 @@
+body{
+    background-image: url("/static/beetlyme-background.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed; 
+    background-size: cover;
+
+    font-family: 'Quando', serif;
+}
+
+h1, h2, h3, h4 { 
+    font-family: 'Raleway', sans-serif;
+}
+
+/*img.source-image {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}*/

@@ -6,11 +6,13 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="/static/stylesheet.css">
+  <link href="https://fonts.googleapis.com/css?family=Quando|Raleway" rel="stylesheet">
 
 <style>
     .navbar-default {
-    background-color: #b0d426;
-    border-color: #b0d426;
+    background-color: #70A650;
+    border-color: #70A650;
 }
     #brandname {
         color: black;
@@ -19,7 +21,7 @@
     color: white;
     }
     body {
-      background-color: #e8ffc0
+      background-color: #CAF079
       }
   </style>
 
@@ -34,6 +36,9 @@
 {% endif %}
 <body>
 
+<!--   <img class="source-image" src="static/beetlyme-background.jpg" alt="" />
+ -->
+ <div class="container">
     {% for flash in get_flashed_messages() %}
       {{ flash }}
     {% endfor %}
@@ -44,11 +49,11 @@
      
   
   <style>
-    body {
+    /*body {
       background-color: #e8ffc0
-      }
+      }*/
   </style>
-
+</div>
 </body>
 <footer class="container-fluid text-center">
 <!--   <p>BEEtLyme v.0.1 2017, produced by Anna Liisa Moter</p>

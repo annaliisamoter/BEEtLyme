@@ -17,13 +17,13 @@
         <h4>Symptoms</h4>
         <ul id='symp-checks' data-checkbox-count=0>
           {% for symptom in symptom_options %}
-            {{ symptom.symptom.name }} <input type=checkbox class='symptom-checkbox' name='symptom' value="{{ symptom.symptom.name }}"><br>
+            <input type=checkbox class='symptom-checkbox' name='symptom' value="{{ symptom.symptom.name }}">  {{ symptom.symptom.name }}<br>
           {% endfor %}
         </ul>
         <h4>Treatments</h4>
         <ul id= 'treat-checks' data-checkbox-count>
           {% for treatment in treatment_options %}
-           {{ treatment.treatment.name }} <input type=checkbox class='treatment-checkbox' name='treatment' value="{{ treatment.treatment.name }}"><br>
+           <input type=checkbox class='treatment-checkbox' name='treatment' value="{{ treatment.treatment.name }}">  {{ treatment.treatment.name }}<br>
           {% endfor %}
         </ul>
         <input type='submit' class="btn btn-default" value='submit'>

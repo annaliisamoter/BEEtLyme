@@ -26,7 +26,7 @@ label{margin-left: 20px;}
 <div class="row">
   <div class="col-xs-2"></div>
   <div class="col-xs-4">
-    <h4>Track your Symptoms.</h4>  
+    <h3>Track your Symptoms.</h3>  
         <p>For each symptom, enter a value between 0 and 10 to reflect today's intensity of that symptom.  A zero would indicate the symptom is completely absent this day, and a 10 is the most intense manifestation of the symptom you can imagine.<p>
 
         <form id='symptoms' method="POST">
@@ -40,13 +40,13 @@ label{margin-left: 20px;}
         </form>
   </div>
   <div class="col-xs-4">
-    <h4>Track your Treatments.</h4>   
+    <h3>Track your Treatments.</h3>   
         <p>For Bee Venom, enter the number of stings in a given session.  For supplements and medications, enter the dosage in milligrams or other appropriate numerical measurement.<p>
 
         <form id='treatments' method="POST">
             <ul>
             {% for treatment in treatments %}
-            <li>{{ treatment.treatment.name }} :<input type='number' class='values' name='{{ treatment.treatment.name }}' required></li>
+            <li>{{ treatment.treatment.name }} :<input type='number' class='values' name='{{ treatment.treatment.name }}' required min='0' max='10000'></li>
             {% endfor %}
             </ul>
             <button id='treat-submit' class="btn btn-default">Submit</button>
@@ -57,9 +57,9 @@ label{margin-left: 20px;}
 </div>
 <div class="row">
     <div class="col-xs-2"></div>
-    <div class="col-xs-9"><p>Note on inputting tracking values: You may use the calendar above to backfill tracking data. In order for the graph to display correctly, only one value can be input per calendar date.  Therefore, if you re-enter values for a date for which you have already entered values, the values will be overwritten to reflect your most recent inputs.</p>
+    <div class="col-xs-5"><p>Note on inputting tracking values: You may use the calendar above to backfill tracking data. In order for the graph to display correctly, only one value can be input per calendar date.  Therefore, if you re-enter values for a date for which you have already entered values, the values will be overwritten to reflect your most recent inputs.</p>
         </div>
-    <div class="col-xs-1"></div>
+    <div class="col-xs-5"></div>
 </div>
 <div class="row">
     <div class="col-xs-2"></div>
