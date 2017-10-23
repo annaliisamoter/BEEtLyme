@@ -88,8 +88,6 @@ def login_process():
         return redirect('/login')
 
 
-
-
 @app.route('/logout')
 def log_out():
     """Logs a user out"""

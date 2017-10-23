@@ -9,7 +9,7 @@
   <div class="col-xs-1"></div>
 </div>
 
-{% if not session['user_id'] %}
+{% if not (session and session['user_id']) %}
 <div class="row">
   <div class="col-xs-1"></div>
   <div class="col-xs-5">

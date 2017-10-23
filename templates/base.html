@@ -25,7 +25,7 @@
 
 </head>
 
-{% if session['user_id'] %}
+{% if session and session['user_id'] %}
     {% include 'nav_bar_logged_in.html' %}
 
 {% else %}
