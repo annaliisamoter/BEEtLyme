@@ -6,4 +6,9 @@ helper-copy.py
 plotly_graph.js
 seed_data/fake_treatment_entries
 seed_data/moonphase.py
+chart.html
+track_treatments.html
+set_treatment.html
+fake_treatment_entries
+
 

@@ -16,7 +16,7 @@ app.jinja_env.undefined = StrictUndefined
 @app.route('/')
 def index():
     """Homepage."""
-    
+    session['user_id'] = 1
     return render_template("homepage.html")
 
 
