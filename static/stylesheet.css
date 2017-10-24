@@ -3,17 +3,30 @@ body{
     background-repeat: no-repeat;
     background-attachment: fixed; 
     background-size: cover;
-
-    font-family: 'Quando', serif;
+    font-family:  'Quando', serif;
 }
-
 h1, h2, h3, h4 { 
-    font-family: 'Raleway', sans-serif;
+    font-family: 'Raleway', bold, sans-serif;
 }
 
-/*img.source-image {
-  width: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-}*/
+
+input[type='text'], 
+input[type='password'],
+input[type='button'] {
+    display:block;
+    margin: 5px;
+    padding: 2px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+input[type='number'],
+input[type='checkbox'] {
+    display:inline;
+    padding: 5px;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.50);
+}
+

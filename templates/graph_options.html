@@ -3,8 +3,8 @@
 <div class="row">
   <div class="col-xs-2"></div>
   <div class="col-xs-9">
-    <h3>Graphing options.</h3>
-    <h4>  Choose up to three symptoms and one treatment to graph over time.</h4>
+    <h2>Graphing options</h2>
+    <h4>Choose up to three symptoms and one treatment to graph over time.</h4>
 
 <!-- Add constraint in on JS side -->
   <div class="col-xs-1"></div>
@@ -17,13 +17,13 @@
         <h4>Symptoms</h4>
         <ul id='symp-checks' data-checkbox-count=0>
           {% for symptom in symptom_options %}
-            <input type=checkbox class='symptom-checkbox' name='symptom' value="{{ symptom.symptom.name }}">  {{ symptom.symptom.name }}<br>
+            <input type=checkbox class='symptom-checkbox' name='symptom' value="{{ symptom.symptom.name }}">    {{ symptom.symptom.name }}<br>
           {% endfor %}
         </ul>
         <h4>Treatments</h4>
         <ul id= 'treat-checks' data-checkbox-count>
           {% for treatment in treatment_options %}
-           <input type=checkbox class='treatment-checkbox' name='treatment' value="{{ treatment.treatment.name }}">  {{ treatment.treatment.name }}<br>
+           <input type=checkbox class='treatment-checkbox' name='treatment' value="{{ treatment.treatment.name }}">    {{ treatment.treatment.name }}<br>
           {% endfor %}
         </ul>
         <input type='submit' class="btn btn-default" value='submit'>

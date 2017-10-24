@@ -5,18 +5,18 @@
 <script src="/static/jquery.easy-autocomplete.js"></script>
 
 <div class="row">
-  <div class="col-xs-1"></div>
-  <div class="col-xs-10">
+  <div class="col-xs-2"></div>
+  <div class="col-xs-8">
+    <br>
     <h2>Set a new symptom or treatment to track</h2>
-    <h4>Select from the autocomplete options or set your own unique value to track.</h4>
-  <div class="col-xs-1"></div>
+    <h4>Select from the autocomplete options by clicking on your choice, or set your own unique value to track.</h4>
+  </div><br><br><br><br>
+  <div class="col-xs-2"></div>
 </div>
-<br>
-<br>
 
 <div class="row">
-  <div class="col-xs-2"></div>
-  <div class="col-xs-4">
+  <div class="col-xs-2">  </div>
+  <div class="col-xs-4"><br>
     <form name='symptom' method="POST">
     <label for="symptom">Choose Symptom to track:</label>
     <input type='text' id='autosymptom' name='symptom' placeholder='search' required>
@@ -26,27 +26,24 @@
     </form>
   </div>
 
-  <div class="col-xs-4">
+  <div class="col-xs-4"><br>
     <form name="treatment" method="POST">
     <label for="treatment">Choose Treatment to track:</label>
     <input type='text' id='autotreatment' name='treatment' placeholder='search' required>
     <button id='submit-treat' class="btn btn-default">Submit</button>
     <br>
     <p id='set-treat'></p>
-
     </form>
   </div>
-  <div class="col-xs-2"></div>
+
+  <div class="col-xs-2" ></div>
 </div>
 
-<script>
 
+<script>
 //Gets list of symptoms for symptom autocomplete
 $.get('/auto_symptom', function(symptoms){
-
-
     console.log(symptoms);
-
     var options = {
         data: symptoms,
         list: {
@@ -55,35 +52,27 @@ $.get('/auto_symptom', function(symptoms){
             }
         }
     };
-
     $("#autosymptom").easyAutocomplete(options);
-
 })
 //Gets list of treatments for treatment autocomplete
 $.get('/auto_treatment', function(treatments){
-
-
     console.log(treatments);
-
     var options = {
         data: treatments,
+        highlightPhrase: true,
         list: {
             match: {
                 enabled: true
             }
         }
     };
-
     $("#autotreatment").easyAutocomplete(options);
-
 })
-
 //sets success button at end of set symp ajax call.
 function successSympMessage(result) {
-    $('#submit-symp').toggleClass("btn btn-success").html("Success");
+    $('#submit-symp').changeClass("btn btn-success").html("Success");
     $('#set-symp').html(result);
 }
-
 //ajax call to set symptom
 function submitSetSymptom(evt) {
     evt.preventDefault();
@@ -94,13 +83,11 @@ function submitSetSymptom(evt) {
 }
 //event listener for ajax call
 $('#submit-symp').on("click", submitSetSymptom);
-
 //sets success button at end of set treat ajax call.
 function successTreatMessage(result) {
-    $('#submit-treat').toggleClass("btn btn-success").html("Success");
+    $('#submit-treat').changeClass("btn btn-success").html("Success");
     $('#set-treat').html(result);
 }
-
 //ajax call to set treatment
 function submitSetTreatment(evt) {
     evt.preventDefault();
@@ -114,7 +101,6 @@ function submitSetTreatment(evt) {
 //event listener for ajax call
 $('#submit-treat').on('click', submitSetTreatment);
     
-
 </script>
 
 

@@ -29,29 +29,31 @@ label{margin-left: 20px;}
     <h3>Track your Symptoms.</h3>  
         <p>For each symptom, enter a value between 0 and 10 to reflect today's intensity of that symptom.  A zero would indicate the symptom is completely absent this day, and a 10 is the most intense manifestation of the symptom you can imagine.<p>
 
-        <form id='symptoms' method="POST">
+        <form id='symptoms-track' method="POST">
             <ul>
             {% for symptom in symptoms %}
-            {{ symptom.symptom.name }} :<input type='number' class= 'values' name='{{ symptom.symptom.name }}' required min='0' max='10'><br>
+             <input type='number' class= 'values' name='{{ symptom.symptom.name }}' required min='0' max='10'>  {{ symptom.symptom.name }}<br>
             {% endfor %}
             </ul>
             <button id='symp-submit' class="btn btn-default">Submit</button>
             <p id='symptom-result'></p>
         </form>
+        <br><br>
   </div>
   <div class="col-xs-4">
     <h3>Track your Treatments.</h3>   
         <p>For Bee Venom, enter the number of stings in a given session.  For supplements and medications, enter the dosage in milligrams or other appropriate numerical measurement.<p>
 
-        <form id='treatments' method="POST">
+        <form id='treatments-track' method="POST">
             <ul>
             {% for treatment in treatments %}
-            <li>{{ treatment.treatment.name }} :<input type='number' class='values' name='{{ treatment.treatment.name }}' required min='0' max='10000'></li>
+            <input type='number' class='values' name='{{ treatment.treatment.name }}' required min='0' max='10000'>  {{ treatment.treatment.name }}<br>
             {% endfor %}
             </ul>
             <button id='treat-submit' class="btn btn-default">Submit</button>
             <p id='treatment-result'></p>
         </form>
+        <br><br>
     </div>
     <div class="col-xs-2"></div>
 </div>
@@ -64,7 +66,7 @@ label{margin-left: 20px;}
 <div class="row">
     <div class="col-xs-2"></div>
     <div class="col-xs-8">
-      <label for="comment">Journal Entry (optional):</label>
+      <h3>Journal Entry (optional):</h3>
       <textarea class="form-control" name='comment' rows="5" id="comment"></textarea>
       <button id='comment-submit' class="btn btn-default">Submit</button>
       <p id='journal-result'></p>
