@@ -16,7 +16,7 @@ app.jinja_env.undefined = StrictUndefined
 @app.route('/')
 def index():
     """Homepage."""
-    #session['user_id'] = 1
+    
     return render_template("homepage.html")
 
 
@@ -93,7 +93,7 @@ def log_out():
     """Logs a user out"""
     session['user_id'] = None
     session['logged_in'] = False
-    flash("You have logged out.  Goodbye.")
+    flash("You have logged out.  Come back soon!")
 
     return redirect("/")
 
@@ -159,7 +159,6 @@ def show_set_symptoms():
 @app.route('/auto_symptom', methods=['GET'])
 def set_auto_complete_symp():
     """Handles autocomplete ajax request"""
-    print "this is printing from the auto_symptom app route"
 
     symptoms = db.session.query(Symptom.name).all()
     options = [symptom.name for symptom in symptoms]
@@ -214,7 +213,6 @@ def set_new_symptom():
 @app.route('/auto_treatment', methods=['GET'])
 def set_auto_complete_treat():
     """Handles autocomplete ajax request"""
-    print "this is printing from the auto_symptom app route"
 
     treatments = db.session.query(Treatment.name).all()
     options = [treatment.name for treatment in treatments]
@@ -286,7 +284,6 @@ def add_symptom_entries():
     user = session['user_id']
     date = request.form.get("date")
     symptoms = request.form.items()
-    #symptoms = json.loads(symptoms)
     print "This is the symp values:", symptoms
     print "This is the date captured:", date
 
@@ -312,7 +309,7 @@ def add_symptom_entries():
                 db.session.add(symptom_entry)
 
     db.session.commit()
-    return "Your symptom data have been logged."
+    return "Your symptom input has been logged."
 
 
 
@@ -348,7 +345,7 @@ def add_treatment_entries():
                 db.session.add(treatment_entry)
 
     db.session.commit()
-    return "Your treatment data have been logged."
+    return "Your treatment input has been logged."
 
 
 @app.route('/log_comment', methods=["POST"])
@@ -406,7 +403,7 @@ def get_graph_options():
 @app.route('/graph_data.json', methods=['GET'])
 def assemble_graph_data():
     """queries db and properly formats a json to seed graph data."""
-    print request.args
+
     user_id = session['user_id']
     symptom_options = request.args.get('symptom_options')
     treatment_option = request.args.get('treatment_option')
@@ -432,7 +429,6 @@ def assemble_graph_data():
     total_data['data'].append(helper.full_moon_phase_overlay(date_range))
     total_data['data'].append(helper.new_moon_phase_overlay(date_range))
 
-    print "This is the total_data", total_data
     return jsonify(total_data)
 
 

@@ -15,7 +15,7 @@ label{margin-left: 20px;}
 <div class="row">
     <div class="col-xs-2"></div>
     <div class="col-xs-9">
-        <label>Select Date: </label>
+        <label>Select Date *: </label>
         <div id="datepicker" class="input-group date" data-date-format="mm-dd-yyyy">
         <input class="form-control" type="text" readonly />
         <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
@@ -36,6 +36,8 @@ label{margin-left: 20px;}
             {% endfor %}
             </ul>
             <button id='symp-submit' class="btn btn-default">Submit</button>
+            <br>
+            <br>
             <p id='symptom-result'></p>
         </form>
         <br><br>
@@ -51,6 +53,8 @@ label{margin-left: 20px;}
             {% endfor %}
             </ul>
             <button id='treat-submit' class="btn btn-default">Submit</button>
+            <br>
+            <br>
             <p id='treatment-result'></p>
         </form>
         <br><br>
@@ -59,9 +63,9 @@ label{margin-left: 20px;}
 </div>
 <div class="row">
     <div class="col-xs-2"></div>
-    <div class="col-xs-5"><p>Note on inputting tracking values: You may use the calendar above to backfill tracking data. In order for the graph to display correctly, only one value can be input per calendar date.  Therefore, if you re-enter values for a date for which you have already entered values, the values will be overwritten to reflect your most recent inputs.</p>
+    <div class="col-xs-8"><p> * Note on inputting tracking values: You may use the calendar above to backfill tracking data. In order for the graph to display correctly, only one value can be input per calendar date.  Therefore, if you re-enter values for a date for which you have already entered values, the values will be overwritten to reflect your most recent inputs.</p>
         </div>
-    <div class="col-xs-5"></div>
+    <div class="col-xs-2"></div>
 </div>
 <div class="row">
     <div class="col-xs-2"></div>
@@ -69,6 +73,8 @@ label{margin-left: 20px;}
       <h3>Journal Entry (optional):</h3>
       <textarea class="form-control" name='comment' rows="5" id="comment"></textarea>
       <button id='comment-submit' class="btn btn-default">Submit</button>
+      <br>
+      <br>
       <p id='journal-result'></p>
     </div>
     <div class="col-xs-2"></div>

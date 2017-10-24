@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
-{% block content %}
-<link type='text/css' href="path/to/easy-autocomplete.css">
-<link type='text/css' href="path/to/easy-autocomplete.themes.css">
+{% block header %}
+<link rel="stylesheet" href="/static/easy-autocomplete.css">
+<link rel="stylesheet" href="/static/easy-autocomplete.themes.css">
 <script src="/static/jquery.easy-autocomplete.js"></script>
+{% endblock %}
 
+{% block content %}
 <div class="row">
   <div class="col-xs-2"></div>
   <div class="col-xs-8">
@@ -22,6 +24,7 @@
     <input type='text' id='autosymptom' name='symptom' placeholder='search' required>
     <button id='submit-symp' class="btn btn-default">Submit</button>
     <br>
+    <br><br>
     <p id='set-symp'></p>
     </form>
   </div>
@@ -32,6 +35,7 @@
     <input type='text' id='autotreatment' name='treatment' placeholder='search' required>
     <button id='submit-treat' class="btn btn-default">Submit</button>
     <br>
+    <br><br>
     <p id='set-treat'></p>
     </form>
   </div>
@@ -59,7 +63,6 @@ $.get('/auto_treatment', function(treatments){
     console.log(treatments);
     var options = {
         data: treatments,
-        highlightPhrase: true,
         list: {
             match: {
                 enabled: true
@@ -70,7 +73,7 @@ $.get('/auto_treatment', function(treatments){
 })
 //sets success button at end of set symp ajax call.
 function successSympMessage(result) {
-    $('#submit-symp').changeClass("btn btn-success").html("Success");
+    $('#submit-symp').toggleClass("btn btn-success").html("Success");
     $('#set-symp').html(result);
 }
 //ajax call to set symptom
@@ -85,7 +88,7 @@ function submitSetSymptom(evt) {
 $('#submit-symp').on("click", submitSetSymptom);
 //sets success button at end of set treat ajax call.
 function successTreatMessage(result) {
-    $('#submit-treat').changeClass("btn btn-success").html("Success");
+    $('#submit-treat').toggleClass("btn btn-success").html("Success");
     $('#set-treat').html(result);
 }
 //ajax call to set treatment
