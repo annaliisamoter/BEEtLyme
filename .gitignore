@@ -1,4 +1,6 @@
 env/
+lib/
+
 *.pyc
 secrets.ssh
 fake_treatment_entries
@@ -12,3 +14,6 @@ set_treatment.html
 fake_treatment_entries
 
 
+# Code coverage
+htmlcov/
+.coverage
