@@ -1,0 +1,10 @@
+.git
+
+env/
+lib/
+
+*.pyc
+
+# Code coverage
+htmlcov/
+.coverage
