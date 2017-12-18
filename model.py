@@ -196,7 +196,7 @@ def connect_to_db(app):
     host = os.getenv('DB_HOST', 'localhost')
     port = os.getenv('DB_PORT', '5432')
     database = 'beetlyme'
-    database_url = 'postgresql://%s:%s@%s:%d/%s' % (username, password, host, port, database)
+    database_url = 'postgresql://%s:%s@%s:%s/%s' % (username, password, host, port, database)
 
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
