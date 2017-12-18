@@ -1,7 +1,8 @@
 """Models and db for BEEtLyme Project"""
 
 from flask_sqlalchemy import SQLAlchemy
-#from datetime import datetime
+import os
+
 db = SQLAlchemy()
 
 
@@ -187,14 +188,20 @@ class NewMoon(db.Model):
         return "<New Moon on %s>" % (self.new_moon_date)  #pragma: no cover
 
 
-def connect_to_db(app, db_uri='postgresql:///beetlyme'):
+def connect_to_db(app):
     """Connect the database to our Flask app."""
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
+    username = os.getenv('DB_USER', 'beetlyme')
+    password = os.getenv('DB_PASS', '')
+    host = os.getenv('DB_HOST', 'localhost')
+    port = os.getenv('DB_PORT', '5432')
+    database = 'beetlyme'
+    database_url = 'postgresql://%s:%s@%s:%d/%s' % (username, password, host, port, database)
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)
-
 
 if __name__ == "__main__":  #pragma: no cover
 
