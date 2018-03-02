@@ -24,6 +24,7 @@ symptoms are so varied and can come and go.  We need a better way to keep track 
 for visualization of efficacy over time.
 
 ##Features
+To see a screencast demo of BEEtLyme, go to https://youtu.be/DSugWJconL0
 
 <img src="https://www.evernote.com/l/AMsihbKslMdGhpVJhBD2-OaXRgYwWzKji00B/image.png" alt="BEEtLyme_Homepage" />
 
