@@ -16,6 +16,7 @@ Flask-Bcrypt==0.7.1
 Flask-DebugToolbar==0.10.1
 Flask-SQLAlchemy==2.2
 functools32==3.2.3.post2
+gunicorn==19.7.1
 idna==2.6
 ipython==5.5.0
 ipython-genutils==0.2.0
