@@ -432,10 +432,13 @@ def assemble_graph_data():
     return jsonify(total_data)
 
 
+# Always connect to the DB, even when executed via gunicorn
+connect_to_db(app)
+
 if __name__ == "__main__":  #pragma: no cover
     #app.debug = True
     #app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-    connect_to_db(app)  #pragma
+    # connect_to_db(app)  #pragma
     # DebugToolbarExtension(app)
 
     app.run(host="0.0.0.0")  
