@@ -6,12 +6,10 @@ from model import UserTreatment, SymptomEntry, TreatmentEntry, FullMoon, NewMoon
 import helper
 import json
 from flask_bcrypt import Bcrypt
-from flask_heroku import Heroku
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 app.secret_key = "ABC"
-heroku = Heroku(app)
 app.jinja_env.undefined = StrictUndefined
 
 
