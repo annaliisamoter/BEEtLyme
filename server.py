@@ -6,7 +6,7 @@ from model import UserTreatment, SymptomEntry, TreatmentEntry, FullMoon, NewMoon
 import helper
 import json
 from flask_bcrypt import Bcrypt
-from flask.ext.heroku import Heroku
+from flask_heroku import Heroku
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
